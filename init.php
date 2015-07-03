@@ -4,11 +4,11 @@
 * @version 1.0
 */
 /*
-Plugin Name: Image Rotation Repair
-Description: The Image Rotation Repair plugin simply fixes image orientation based on EXIF data.  This is primarily a patch for mis-oriented images delivered from iPhones.  Functionally it filters all uploads and if EXIF->Orientation is set to a number greater than 1, then the image is resaved with a new orientation before the image is processed by wordpress.
-Author: Shane & Peter, Inc.
-Version: 1.1
-Author URI: http://shaneandpeter.com
+Plugin Name: Fix Image Rotation
+Description: Fix Image Rotation plugin simply fixes image orientation based on EXIF data.  This is primarily a patch for mis-oriented images delivered from iPhones.  Functionally it filters all uploads and if EXIF->Orientation is set to a number greater than 1, then the image is resaved with a new orientation before the image is processed by wordpress.
+Author: gagan0123
+Version: 1.0
+Author URI: http://gagan.pro
 */
 
 if ( !class_exists( 'FixImageRotation' ) ) {
