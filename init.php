@@ -11,8 +11,8 @@ Version: 1.1
 Author URI: http://shaneandpeter.com
 */
 
-if ( !class_exists( 'ImageRotationRepair' ) ) {
-	class ImageRotationRepair {
+if ( !class_exists( 'FixImageRotation' ) ) {
+	class FixImageRotation {
 		
 		var $orientation_fixed = array();
 		
@@ -100,6 +100,6 @@ if ( !class_exists( 'ImageRotationRepair' ) ) {
 		}
 	}
 
-	new ImageRotationRepair();
+	new FixImageRotation();
 }
 ?>
