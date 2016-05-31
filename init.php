@@ -2,7 +2,7 @@
 
 /**
  * @package Fix Image Rotation
- * @version 1.0
+ * @version 1.1
  */
 /*
   Plugin Name: Fix Image Rotation
@@ -28,7 +28,7 @@ if (!class_exists('FixImageRotation')) {
 
         public function filter_wp_handle_upload($file) {
             $suffix = substr($file['file'], strrpos($file['file'], '.', -1) + 1);
-            if (in_array($suffix, array('jpg', 'jpeg', 'png', 'gif'))) {
+            if (in_array($suffix, array('jpg', 'jpeg', 'tiff'))) {
                 $this->fixImageOrientation($file['file']);
             }
             return $file;
@@ -36,7 +36,7 @@ if (!class_exists('FixImageRotation')) {
 
         public function filter_wp_handle_upload_prefilter($file) {
             $suffix = substr($file['name'], strrpos($file['name'], '.', -1) + 1);
-            if (in_array($suffix, array('jpg', 'jpeg', 'png', 'gif'))) {
+            if (in_array($suffix, array('jpg', 'jpeg', 'tiff' ))) {
                 $this->fixImageOrientation($file['tmp_name']);
             }
             return $file;

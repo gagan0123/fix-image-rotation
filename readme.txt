@@ -20,5 +20,7 @@ Fix Image Rotation plugin fixes image orientation based on EXIF data. Fixes the 
 
 == Changelog ==
 
+= 1.1 =
+Fix for PNG files being sent for orientation correction while PNG files don't even have EXIF data
 = 1.0 =
 Initial Release
