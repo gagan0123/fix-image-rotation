@@ -3,14 +3,14 @@
 # The difference is that this script lives in the plugin's git repo & doesn't require an existing SVN repo.
 
 # main config
-export PLUGINSLUG="fix-image-rotation"  #must match with wordpress.org plugin slug
-export MAINFILE="init.php" # this should be the name of your main php file in the wordpress plugin
+export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
+export PLUGINSLUG="$(basename $DIR)"  #must match with wordpress.org plugin slug
+export MAINFILE="$PLUGINSLUG.php" # this should be the name of your main php file in the wordpress plugin
 
 ##### YOU CAN STOP EDITING HERE #####
-CURRENTDIR=`pwd`
 
 # git config
-GITPATH="$CURRENTDIR/" # this file should be in the base of your git repository
+GITPATH="$DIR/" # this file should be in the base of your git repository
 
 # svn config
 SVNPATH="/tmp/$PLUGINSLUG" # path to a temp SVN repo. No trailing slash required and don't add trunk.
@@ -36,7 +36,7 @@ echo
 NEWVERSION1=`grep "^Stable tag" $GITPATH/readme.txt | awk -F' ' '{print $3}'`
 echo "readme version: $NEWVERSION1"
 #NEWVERSION2=`grep "^Version" $GITPATH/$MAINFILE | awk -F' ' '{print $2}'`
-NEWVERSION2=`grep "Version" $GITPATH/$MAINFILE | head -n1 | awk -F':' '{print $2}' | awk -F' ' '{print $1}'`
+NEWVERSION2=`grep -i "Version" $GITPATH/$MAINFILE | head -n1 | awk -F':' '{print $2}' | awk -F' ' '{print $1}'`
 echo "$MAINFILE version: $NEWVERSION2"
 
 if [ "$NEWVERSION1" != "$NEWVERSION2" ]; then echo "Versions don't match. Exiting...."; exit 1; fi
@@ -44,23 +44,16 @@ if [ "$NEWVERSION1" != "$NEWVERSION2" ]; then echo "Versions don't match. Exitin
 echo "Versions match in readme.txt and PHP file. Let's proceed..."
 
 cd $GITPATH
-#!/bin/bash
-
-
 
 # Variables List
 TITLE=$(head -n1 readme.txt)
 LICENSE=$(cat readme.txt | grep "License URI:" | awk -F// '{ print $2 }' |  cat readme.txt | grep "License URI:" | cut -d: -f2,3)
-#echo $TITLE $LICENSE
 
 # Remove Previous Files
 if [ -e /tmp/file ] || [ -e /tmp/file1 ] || [ -e /tmp/file2 ]
 then
         rm /tmp/file* &> /dev/null
 fi
-
-
-
 
 # Add Images
 curl -I $1/assets/banner-772x250.png 2> /dev/null | grep '200 OK' &> /dev/null
@@ -98,10 +91,8 @@ echo $LICENSE | grep 3.0
 if [ $? -eq 0 ] 
 then
         LICENSE="[GPL v3 or later] (http://www.gnu.org/licenses/gpl-3.0.html)"
-        #echo $LICENSE
 else
         LICENSE="[GPL v2 or later] ($LICENSE)"
-        #echo $LICENSE
 fi
 
 # Send License Details To Temp File
@@ -163,13 +154,22 @@ svn propset svn:ignore "deploy.sh
 deploy-common.sh
 readme.sh
 README.md
+bin
 .git
 .gitattributes
 .gitignore
 map.conf
 nginx.log
 tests
-phpunit.xml" "$SVNPATH/trunk/"
+Gruntfile.js
+package.json
+phpunit.xml
+phpunit.xml.dist
+package-lock.json
+node_modules
+.sass-cache
+.gitlab-ci.yml
+.travis.yml" "$SVNPATH/trunk/"
 
 echo "Changing directory to SVN and committing to trunk"
 cd $SVNPATH/trunk/
