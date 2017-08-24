@@ -10,19 +10,6 @@ module.exports = function ( grunt ) {
 				}
 			}
 		},
-		makepot: {
-			target: {
-				options: {
-					domainPath: '/languages',
-					mainFile: 'init.php',
-					potFilename: 'fix-image-rotation.pot',
-					type: 'wp-plugin',
-					potHeaders: {
-						poedit: false
-					}
-				}
-			}
-		},
 		watch: {
 			grunt: {
 				files: [ 'Gruntfile.js' ]
@@ -35,11 +22,7 @@ module.exports = function ( grunt ) {
 	} );
 
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
-	grunt.loadNpmTasks( 'grunt-contrib-sass' );
-	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
-	grunt.loadNpmTasks( 'grunt-wp-i18n' );
-
 	grunt.registerTask( 'default', [
 		'watch'
 	] );
