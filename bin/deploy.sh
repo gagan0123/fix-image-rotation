@@ -83,6 +83,7 @@ package-lock.json
 node_modules
 .sass-cache
 .gitlab-ci.yml
+assets
 .travis.yml" "$SVNPATH/trunk/"
 
 echo "Changing directory to SVN and committing to trunk"
