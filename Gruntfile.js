@@ -14,8 +14,8 @@ module.exports = function ( grunt ) {
 			target: {
 				options: {
 					domainPath: '/languages',
-					mainFile: 'drafts-for-friends.php',
-					potFilename: 'drafts-for-friends.pot',
+					mainFile: 'init.php',
+					potFilename: 'fix-image-rotation.pot',
 					type: 'wp-plugin',
 					potHeaders: {
 						poedit: false
