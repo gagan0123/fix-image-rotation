@@ -39,6 +39,10 @@ Yes you can. As mentioned in the description, just fork the [GitHub Repo](https:
 You can even contribute by adding banner images and logos for the plugin. If you are familiar with GitHub, then fork the above repo and add the images in a folder named assets, and send pull request; else you can submit URLs to the images as support request.
 
 
+## Screenshots ##
+1. Adding images of different orientations without this plugin.
+2. Adding images of different orientations with this plugin.
+
 ## Changelog ##
 
 ### 2.0 ###
