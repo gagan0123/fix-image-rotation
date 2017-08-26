@@ -1,3 +1,5 @@
+<img src='https://github.com/gagan0123/fix-image-rotation/raw/master/assets/icon-128x128.png' align='right' />
+
 # Fix Image Rotation #
 **Contributors:** [gagan0123](https://profiles.wordpress.org/gagan0123)  
 **Tags:** Image Rotation, iPhone  
