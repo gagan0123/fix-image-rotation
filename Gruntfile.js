@@ -5,6 +5,9 @@ module.exports = function ( grunt ) {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		wp_readme_to_markdown: {
 			dist: {
+				options: {
+					screenshot_url: 'https://ps.w.org/{plugin}/assets/{screenshot}.png'
+				},
 				files: {
 					'README.md': 'readme.txt'
 				}
