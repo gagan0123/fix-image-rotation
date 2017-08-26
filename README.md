@@ -41,10 +41,10 @@ You can even contribute by adding banner images and logos for the plugin. If you
 
 ## Screenshots ##
 ### 1. Adding images of different orientations without this plugin. ###
-![Adding images of different orientations without this plugin.](https://ps.w.org/fix-image-rotation/assets/screenshot-1.png)
+![Adding images of different orientations without this plugin.](https://github.com/gagan0123/fix-image-rotation/raw/master/assets/screenshot-1.png)
 
 ### 2. Adding images of different orientations with this plugin. ###
-![Adding images of different orientations with this plugin.](https://ps.w.org/fix-image-rotation/assets/screenshot-2.png)
+![Adding images of different orientations with this plugin.](https://github.com/gagan0123/fix-image-rotation/raw/master/assets/screenshot-2.png)
 
 
 ## Changelog ##

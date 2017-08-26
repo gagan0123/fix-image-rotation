@@ -6,7 +6,7 @@ module.exports = function ( grunt ) {
 		wp_readme_to_markdown: {
 			dist: {
 				options: {
-					screenshot_url: 'https://ps.w.org/{plugin}/assets/{screenshot}.png'
+					screenshot_url: 'https://github.com/gagan0123/{plugin}/raw/master/assets/{screenshot}.png'
 				},
 				files: {
 					'README.md': 'readme.txt'
