@@ -311,9 +311,8 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		public function restore_meta_data( $meta, $file ) {
 			if ( isset( $this->previous_meta[ $file ] ) ) {
 				return $this->previous_meta[ $file ];
-			} else {
-				return $meta;
-			}
+			} 
+		    return $meta;
 		}
 
 	}
