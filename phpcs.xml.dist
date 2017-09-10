@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="Fix Image Rotation Ruleset">
+	<description>Coding Rules for Fix Image Rotation project</description>
+
+	<!-- Exclude index.php files kept only to prevent directory listing. -->
+	<exclude-pattern>*/index.php</exclude-pattern>
+
+	<!-- Exclude the Node Modules directory. -->
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+
+	<!-- Exclude the tests directory. -->
+	<exclude-pattern>/tests/*</exclude-pattern>
+
+	<!-- Exclude the bin directory. -->
+	<exclude-pattern>/bin/*</exclude-pattern>
+
+	<!-- Exclude Gruntfile.js. -->
+	<exclude-pattern>Gruntfile.js</exclude-pattern>
+
+	<!-- Include the WordPress standards. -->
+	<rule ref="WordPress" />
+
+</ruleset>
