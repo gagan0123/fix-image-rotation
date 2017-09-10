@@ -1,7 +1,12 @@
 <?php
+/**
+ * Contains class to handle interactions with WordPress.
+ *
+ * @package Fix_Image_Rotation
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
@@ -72,7 +77,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		public static function get_instance() {
 
 			// If the single instance hasn't been set, set it now.
-			if ( null == self::$instance ) {
+			if ( null === self::$instance ) {
 				self::$instance = new self();
 			}
 
@@ -109,17 +114,11 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *     @type string $type File type.
 		 * }
 		 *
-		 * @return array {
-		 *     Array of upload data.
-		 *
-		 *     @type string $file Filename of the newly-uploaded file.
-		 *     @type string $url  URL of the uploaded file.
-		 *     @type string $type File type.
-		 * }
+		 * @return array Array of upload data.
 		 */
 		public function filter_wp_handle_upload( $file ) {
 			$suffix = substr( $file['file'], strrpos( $file['file'], '.', -1 ) + 1 );
-			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
+			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
 				$this->fix_image_orientation( $file['file'] );
 			}
 			return $file;
@@ -139,7 +138,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 */
 		public function filter_wp_handle_upload_prefilter( $file ) {
 			$suffix = substr( $file['name'], strrpos( $file['name'], '.', -1 ) + 1 );
-			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
+			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
 				$this->fix_image_orientation( $file['tmp_name'] );
 			}
 			return $file;
@@ -152,7 +151,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @access public
 		 *
-		 * @param string $file Path of the file
+		 * @param string $file Path of the file.
 		 *
 		 * @return void
 		 */
@@ -164,10 +163,10 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 					$rotator = false;
 					$flipper = false;
 
-					// Lets switch to the orientation defined in the exif data
+					// Lets switch to the orientation defined in the exif data.
 					switch ( $exif['Orientation'] ) {
 						case 1:
-							// We don't want to fix an already correct image :)
+							// We don't want to fix an already correct image :).
 							$this->orientation_fixed[ $file ]    = true;
 							return;
 						case 2:
@@ -207,17 +206,17 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 
 					$editor = wp_get_image_editor( $file );
 
-					// If GD Library is being used, then we need to store metadata to restore later
-					if ( 'WP_Image_Editor_GD' == get_class( $editor ) ) {
+					// If GD Library is being used, then we need to store metadata to restore later.
+					if ( 'WP_Image_Editor_GD' === get_class( $editor ) ) {
 						$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
 						add_filter( 'wp_read_image_metadata', array( $this, 'restore_meta_data' ), 10, 2 );
 					}
 					if ( ! is_wp_error( $editor ) ) {
-						// Lets rotate and flip the image based on exif orientation
-						if ( $rotator === true ) {
+						// Lets rotate and flip the image based on exif orientation.
+						if ( true === $rotator ) {
 							$editor->rotate( $orientation );
 						}
-						if ( $flipper !== false ) {
+						if ( false !== $flipper ) {
 							$editor->flip( $flipper[0], $flipper[1] );
 						}
 						$editor->save( $file );
