@@ -279,11 +279,11 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 
 			if ( ! is_wp_error( $editor ) ) {
 				// Lets rotate and flip the image based on exif orientation.
-				if ( true === $actions['rotator'] ) {
-					$editor->rotate( $actions['orientation'] );
+				if ( true === $operations['rotator'] ) {
+					$editor->rotate( $operations['orientation'] );
 				}
-				if ( false !== $actions['flipper'] ) {
-					$editor->flip( $actions['flipper'][0], $actions['flipper'][1] );
+				if ( false !== $operations['flipper'] ) {
+					$editor->flip( $operations['flipper'][0], $operations['flipper'][1] );
 				}
 				$editor->save( $file );
 				$this->orientation_fixed[ $file ] = true;
