@@ -106,6 +106,8 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @access public
 		 *
+		 * @hook wp_handle_upload
+		 *
 		 * @param array $file {
 		 *    Array of upload data.
 		 *
@@ -131,6 +133,8 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * @since 1.0
 		 *
 		 * @access public
+		 *
+		 * @hook wp_handle_upload_prefilter
 		 *
 		 * @param array $file An array of data for a single file.
 		 *
@@ -158,72 +162,131 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		public function fix_image_orientation( $file ) {
 			if ( is_callable( 'exif_read_data' ) && ! isset( $this->oreintation_fixed[ $file ] ) ) {
 				$exif = exif_read_data( $file );
+
 				if ( isset( $exif ) && isset( $exif['Orientation'] ) && $exif['Orientation'] > 1 ) {
+
+					// Need it so that image editors are available to us.
 					include_once( ABSPATH . 'wp-admin/includes/image-edit.php' );
-					$rotator = false;
-					$flipper = false;
 
-					// Lets switch to the orientation defined in the exif data.
-					switch ( $exif['Orientation'] ) {
-						case 1:
-							// We don't want to fix an already correct image :).
-							$this->orientation_fixed[ $file ]    = true;
-							return;
-						case 2:
-							$flipper                             = array( false, true );
-							break;
-						case 3:
-							$orientation                         = -180;
-							$rotator                             = true;
-							break;
-						case 4:
-							$flipper                             = array( true, false );
-							break;
-						case 5:
-							$orientation                         = -90;
-							$rotator                             = true;
-							$flipper                             = array( false, true );
-							break;
-						case 6:
-							$orientation                         = -90;
-							$rotator                             = true;
-							break;
-						case 7:
-							$orientation                         = -270;
-							$rotator                             = true;
-							$flipper                             = array( false, true );
-							break;
-						case 8:
-						case 9:
-							$orientation                         = -270;
-							$rotator                             = true;
-							break;
-						default:
-							$orientation                         = 0;
-							$rotator                             = true;
-							break;
-					}
+					// Calculate the operations we need to perform on the image.
+					$operations = $this->calculate_flip_and_rotate( $file, $exif );
 
-					$editor = wp_get_image_editor( $file );
+					// Lets flip flop and rotate the image as needed.
+					$this->do_flip_and_rotate( $file, $operations );
+				}
+			}
+		}
 
-					// If GD Library is being used, then we need to store metadata to restore later.
-					if ( 'WP_Image_Editor_GD' === get_class( $editor ) ) {
-						$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
-						add_filter( 'wp_read_image_metadata', array( $this, 'restore_meta_data' ), 10, 2 );
-					}
-					if ( ! is_wp_error( $editor ) ) {
-						// Lets rotate and flip the image based on exif orientation.
-						if ( true === $rotator ) {
-							$editor->rotate( $orientation );
-						}
-						if ( false !== $flipper ) {
-							$editor->flip( $flipper[0], $flipper[1] );
-						}
-						$editor->save( $file );
-						$this->orientation_fixed[ $file ] = true;
-					}
-				} // end if $exif
-			} // end is_callable('exif_read_data')
+		/**
+		 * Calculate the flips and rotations image will need to do to fix its orientation.
+		 *
+		 * @since 2.1
+		 *
+		 * @access private
+		 *
+		 * @param string $file Path of the file.
+		 *
+		 * @param array  $exif Exif data of the image.
+		 *
+		 * @return array Array of operations to be performed on the image.
+		 */
+		private function calculate_flip_and_rotate( $file, $exif ) {
+
+			$rotator = false;
+			$flipper = false;
+
+			// Lets switch to the orientation defined in the exif data.
+			switch ( $exif['Orientation'] ) {
+				case 1:
+					// We don't want to fix an already correct image :).
+					$this->orientation_fixed[ $file ]    = true;
+					return;
+				case 2:
+					$flipper                             = array( false, true );
+					break;
+				case 3:
+					$orientation                         = -180;
+					$rotator                             = true;
+					break;
+				case 4:
+					$flipper                             = array( true, false );
+					break;
+				case 5:
+					$orientation                         = -90;
+					$rotator                             = true;
+					$flipper                             = array( false, true );
+					break;
+				case 6:
+					$orientation                         = -90;
+					$rotator                             = true;
+					break;
+				case 7:
+					$orientation                         = -270;
+					$rotator                             = true;
+					$flipper                             = array( false, true );
+					break;
+				case 8:
+				case 9:
+					$orientation                         = -270;
+					$rotator                             = true;
+					break;
+				default:
+					$orientation                         = 0;
+					$rotator                             = true;
+					break;
+			}
+
+			$operations = compact( 'orientation', 'rotator', 'flipper' );
+			return $operations;
+		}
+
+		/**
+		 * Flips and rotates the image based on the parameters provided.
+		 *
+		 * @since 2.1
+		 *
+		 * @access private
+		 *
+		 * @param string $file Path of the file.
+		 *
+		 * @param array  $operations {
+		 *      Array of operations to be performed on the image.
+		 *
+		 *      @type bool       $rotator Whether to rotate the image or not.
+		 *      @type int        $orientation Amount of rotation to be performed in degrees.
+		 *      @type array|bool $flipper {
+		 *          Whether to flip the image or not, false if no flipping needed.
+		 *
+		 *          @type bool $0 Flip along Horizontal Axis.
+		 *          @type bool $1 Flip along Vertical Axis.
+		 *      }
+		 * }
+		 *
+		 * @return bool Returns true if operations were successful, false otherwise.
+		 */
+		private function do_flip_and_rotate( $file, $operations ) {
+
+			$editor = wp_get_image_editor( $file );
+
+			// If GD Library is being used, then we need to store metadata to restore later.
+			if ( 'WP_Image_Editor_GD' === get_class( $editor ) ) {
+				$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
+				add_filter( 'wp_read_image_metadata', array( $this, 'restore_meta_data' ), 10, 2 );
+			}
+
+			if ( ! is_wp_error( $editor ) ) {
+				// Lets rotate and flip the image based on exif orientation.
+				if ( true === $actions['rotator'] ) {
+					$editor->rotate( $actions['orientation'] );
+				}
+				if ( false !== $actions['flipper'] ) {
+					$editor->flip( $actions['flipper'][0], $actions['flipper'][1] );
+				}
+				$editor->save( $file );
+				$this->orientation_fixed[ $file ] = true;
+				return true;
+			}
+			return false;
 		}
 
 		/**
