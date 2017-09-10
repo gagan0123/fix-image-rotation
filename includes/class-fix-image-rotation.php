@@ -171,8 +171,10 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 					// Calculate the operations we need to perform on the image.
 					$operations = $this->calculate_flip_and_rotate( $file, $exif );
 
-					// Lets flip flop and rotate the image as needed.
-					$this->do_flip_and_rotate( $file, $operations );
+					if ( false !== $operations ) {
+						// Lets flip flop and rotate the image as needed.
+						$this->do_flip_and_rotate( $file, $operations );
+					}
 				}
 			}
 		}
@@ -188,7 +190,8 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @param array  $exif Exif data of the image.
 		 *
-		 * @return array Array of operations to be performed on the image.
+		 * @return array|bool Array of operations to be performed on the image,
+		 *                    false if no operations are needed.
 		 */
 		private function calculate_flip_and_rotate( $file, $exif ) {
 
@@ -200,7 +203,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 				case 1:
 					// We don't want to fix an already correct image :).
 					$this->orientation_fixed[ $file ]    = true;
-					return;
+					return false;
 				case 2:
 					$flipper                             = array( false, true );
 					break;
