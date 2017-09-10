@@ -1,79 +1,79 @@
 <?php
 
-if ( !defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( !class_exists( 'Fix_Image_Rotation' ) ) {
+if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 
 	/**
 	 * Handles most of the interaction of the plugin with WordPress
-	 * 
+	 *
 	 * @since 1.0
 	 */
 	class Fix_Image_Rotation {
 
 		/**
 		 * Array storing the file names that were processed, as keys.
-		 * 
+		 *
 		 * @since 1.0
-		 * 
+		 *
 		 * @access private
-		 * 
+		 *
 		 * @var array
 		 */
 		private $orientation_fixed;
 
 		/**
-		 * Array storing the meta data of original files in case it 
+		 * Array storing the meta data of original files in case it
 		 * needs to be restored later.
-		 * 
+		 *
 		 * @since 1.0
-		 * 
+		 *
 		 * @access private
-		 * 
+		 *
 		 * @var array
 		 */
 		private $previous_meta;
 
 		/**
 		 * The instance of the class Fix_Image_Rotation
-		 * 
+		 *
 		 * @since 2.0
-		 * 
+		 *
 		 * @access protected
-		 * 
+		 *
 		 * @var Fix_Image_Rotation
 		 */
 		protected static $instance = null;
 
 		/**
-		 * Lets get started with the construct, registers hooks 
+		 * Lets get started with the construct, registers hooks
 		 * needed for the plugin.
-		 * 
+		 *
 		 * @since 1.0
 		 */
 		public function __construct() {
 			$this->orientation_fixed = array();
-			$this->previous_meta	 = array();
+			$this->previous_meta     = array();
 			$this->register_hooks();
 		}
 
 		/**
 		 * Returns the current instance of the class, in case some other
 		 * plugin needs to use its public methods.
-		 * 
+		 *
 		 * @since 2.0
-		 * 
+		 *
 		 * @access public
-		 * 
+		 *
 		 * @return Fix_Image_Rotation Returns the current instance of the class
 		 */
 		public static function get_instance() {
 
 			// If the single instance hasn't been set, set it now.
 			if ( null == self::$instance ) {
-				self::$instance = new self;
+				self::$instance = new self();
 			}
 
 			return self::$instance;
@@ -81,11 +81,11 @@ if ( !class_exists( 'Fix_Image_Rotation' ) ) {
 
 		/**
 		 * Registers the filters required for this plugin
-		 * 
+		 *
 		 * @since 2.0
-		 * 
+		 *
 		 * @access public
-		 * 
+		 *
 		 * @return void
 		 */
 		public function register_hooks() {
@@ -94,21 +94,21 @@ if ( !class_exists( 'Fix_Image_Rotation' ) ) {
 		}
 
 		/**
-		 * Checks the filename before it is uploaded to WordPress and 
+		 * Checks the filename before it is uploaded to WordPress and
 		 * runs the fix_image_orientation function in case its needed.
-		 * 
+		 *
 		 * @since 1.0
-		 * 
+		 *
 		 * @access public
-		 * 
-		 * @param array  $file {
-		 *     Array of upload data.
+		 *
+		 * @param array $file {
+		 *    Array of upload data.
 		 *
 		 *     @type string $file Filename of the newly-uploaded file.
 		 *     @type string $url  URL of the uploaded file.
 		 *     @type string $type File type.
 		 * }
-		 * 
+		 *
 		 * @return array {
 		 *     Array of upload data.
 		 *
@@ -116,110 +116,109 @@ if ( !class_exists( 'Fix_Image_Rotation' ) ) {
 		 *     @type string $url  URL of the uploaded file.
 		 *     @type string $type File type.
 		 * }
-		 * 
 		 */
 		public function filter_wp_handle_upload( $file ) {
-			$suffix = substr( $file[ 'file' ], strrpos( $file[ 'file' ], '.', -1 ) + 1 );
+			$suffix = substr( $file['file'], strrpos( $file['file'], '.', -1 ) + 1 );
 			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
-				$this->fix_image_orientation( $file[ 'file' ] );
+				$this->fix_image_orientation( $file['file'] );
 			}
 			return $file;
 		}
 
 		/**
-		 * Checks the filename before it is uploaded to WordPress and 
+		 * Checks the filename before it is uploaded to WordPress and
 		 * runs the fix_image_orientation function in case its needed.
-		 * 
+		 *
 		 * @since 1.0
-		 * 
+		 *
 		 * @access public
-		 * 
+		 *
 		 * @param array $file An array of data for a single file.
-		 * 
+		 *
 		 * @return array An array of data for a single file.
 		 */
 		public function filter_wp_handle_upload_prefilter( $file ) {
-			$suffix = substr( $file[ 'name' ], strrpos( $file[ 'name' ], '.', -1 ) + 1 );
+			$suffix = substr( $file['name'], strrpos( $file['name'], '.', -1 ) + 1 );
 			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
-				$this->fix_image_orientation( $file[ 'tmp_name' ] );
+				$this->fix_image_orientation( $file['tmp_name'] );
 			}
 			return $file;
 		}
 
 		/**
 		 * Fixes the orientation of the image based on exif data
-		 * 
+		 *
 		 * @since 1.0
-		 * 
+		 *
 		 * @access public
-		 * 
+		 *
 		 * @param string $file Path of the file
-		 * 
+		 *
 		 * @return void
 		 */
 		public function fix_image_orientation( $file ) {
-			if ( is_callable( 'exif_read_data' ) && !isset( $this->oreintation_fixed[ $file ] ) ) {
+			if ( is_callable( 'exif_read_data' ) && ! isset( $this->oreintation_fixed[ $file ] ) ) {
 				$exif = exif_read_data( $file );
-				if ( isset( $exif ) && isset( $exif[ 'Orientation' ] ) && $exif[ 'Orientation' ] > 1 ) {
+				if ( isset( $exif ) && isset( $exif['Orientation'] ) && $exif['Orientation'] > 1 ) {
 					include_once( ABSPATH . 'wp-admin/includes/image-edit.php' );
 					$rotator = false;
 					$flipper = false;
 
-					//Lets switch to the orientation defined in the exif data
-					switch ( $exif[ 'Orientation' ] ) {
+					// Lets switch to the orientation defined in the exif data
+					switch ( $exif['Orientation'] ) {
 						case 1:
-							//We don't want to fix an already correct image :)
-							$this->orientation_fixed[ $file ]	 = true;
+							// We don't want to fix an already correct image :)
+							$this->orientation_fixed[ $file ]    = true;
 							return;
 						case 2:
-							$flipper							 = array( false, true );
+							$flipper                             = array( false, true );
 							break;
 						case 3:
-							$orientation						 = -180;
-							$rotator							 = true;
+							$orientation                         = -180;
+							$rotator                             = true;
 							break;
 						case 4:
-							$flipper							 = array( true, false );
+							$flipper                             = array( true, false );
 							break;
 						case 5:
-							$orientation						 = -90;
-							$rotator							 = true;
-							$flipper							 = array( false, true );
+							$orientation                         = -90;
+							$rotator                             = true;
+							$flipper                             = array( false, true );
 							break;
 						case 6:
-							$orientation						 = -90;
-							$rotator							 = true;
+							$orientation                         = -90;
+							$rotator                             = true;
 							break;
 						case 7:
-							$orientation						 = -270;
-							$rotator							 = true;
-							$flipper							 = array( false, true );
+							$orientation                         = -270;
+							$rotator                             = true;
+							$flipper                             = array( false, true );
 							break;
 						case 8:
 						case 9:
-							$orientation						 = -270;
-							$rotator							 = true;
+							$orientation                         = -270;
+							$rotator                             = true;
 							break;
 						default:
-							$orientation						 = 0;
-							$rotator							 = true;
+							$orientation                         = 0;
+							$rotator                             = true;
 							break;
 					}
 
 					$editor = wp_get_image_editor( $file );
 
-					//If GD Library is being used, then we need to store metadata to restore later
+					// If GD Library is being used, then we need to store metadata to restore later
 					if ( 'WP_Image_Editor_GD' == get_class( $editor ) ) {
 						$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
 						add_filter( 'wp_read_image_metadata', array( $this, 'restore_meta_data' ), 10, 2 );
 					}
-					if ( !is_wp_error( $editor ) ) {
-						//Lets rotate and flip the image based on exif orientation
+					if ( ! is_wp_error( $editor ) ) {
+						// Lets rotate and flip the image based on exif orientation
 						if ( $rotator === true ) {
 							$editor->rotate( $orientation );
 						}
 						if ( $flipper !== false ) {
-							$editor->flip( $flipper[ 0 ], $flipper[ 1 ] );
+							$editor->flip( $flipper[0], $flipper[1] );
 						}
 						$editor->save( $file );
 						$this->orientation_fixed[ $file ] = true;
@@ -230,18 +229,18 @@ if ( !class_exists( 'Fix_Image_Rotation' ) ) {
 
 		/**
 		 * Restores the meta data of the image after being processed.
-		 * 
+		 *
 		 * WordPress' Imagick Library does not need this, but GD library
-		 * removes metadata from the image upon rotation or flip so this 
+		 * removes metadata from the image upon rotation or flip so this
 		 * method restores those values.
-		 * 
+		 *
 		 * @since 2.0
-		 * 
+		 *
 		 * @hook wp_read_image_metadata
-		 * 
+		 *
 		 * @param array  $meta Image meta data.
 		 * @param string $file Path to image file.
-		 * 
+		 *
 		 * @return array Image meta data.
 		 */
 		public function restore_meta_data( $meta, $file ) {
