@@ -160,7 +160,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * @return void
 		 */
 		public function fix_image_orientation( $file ) {
-			if ( is_callable( 'exif_read_data' ) && ! isset( $this->oreintation_fixed[ $file ] ) ) {
+			if ( is_callable( 'exif_read_data' ) && ! isset( $this->orientation_fixed[ $file ] ) ) {
 				$exif = exif_read_data( $file );
 
 				if ( isset( $exif ) && isset( $exif['Orientation'] ) && $exif['Orientation'] > 1 ) {
