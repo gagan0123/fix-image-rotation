@@ -274,7 +274,6 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 			// If GD Library is being used, then we need to store metadata to restore later.
 			if ( 'WP_Image_Editor_GD' === get_class( $editor ) ) {
 				$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
-				add_filter( 'wp_read_image_metadata', array( $this, 'restore_meta_data' ), 10, 2 );
 			}
 
 			if ( ! is_wp_error( $editor ) ) {
@@ -287,6 +286,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 				}
 				$editor->save( $file );
 				$this->orientation_fixed[ $file ] = true;
+				add_filter( 'wp_read_image_metadata', array( $this, 'restore_meta_data' ), 10, 2 );
 				return true;
 			}
 			return false;
@@ -310,7 +310,11 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 */
 		public function restore_meta_data( $meta, $file ) {
 			if ( isset( $this->previous_meta[ $file ] ) ) {
-				return $this->previous_meta[ $file ];
+				$meta = $this->previous_meta[ $file ];
+
+				// Setting the Orientation meta to the new value after fixing the rotation.
+				$meta['orientation'] = 1;
+				return $meta;
 			}
 			return $meta;
 		}
