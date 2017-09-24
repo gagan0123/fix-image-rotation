@@ -7,3 +7,6 @@ README.md
 package-lock.json
 package.json
 phpcs.xml.dist
+node_modules
+.git
+.DS_Store
