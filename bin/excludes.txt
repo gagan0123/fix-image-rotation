@@ -1,0 +1,9 @@
+assets
+bin
+tests
+.gitignore
+Gruntfile.js
+README.md
+package-lock.json
+package.json
+phpcs.xml.dist
