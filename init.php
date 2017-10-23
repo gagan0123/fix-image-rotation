@@ -23,3 +23,5 @@ if ( ! defined( 'GS_FIR_PATH' ) ) {
 }
 
 require_once GS_FIR_PATH . 'includes/class-fix-image-rotation.php';
+
+Fix_Image_Rotation::get_instance()->register_hooks();

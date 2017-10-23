@@ -53,15 +53,13 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		protected static $instance = null;
 
 		/**
-		 * Lets get started with the construct, registers hooks
-		 * needed for the plugin.
+		 * Constructs the plugin object and initializes its variables.
 		 *
 		 * @since 1.0
 		 */
 		public function __construct() {
 			$this->orientation_fixed = array();
 			$this->previous_meta     = array();
-			$this->register_hooks();
 		}
 
 		/**
@@ -320,6 +318,4 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		}
 
 	}
-
-	Fix_Image_Rotation::get_instance();
 }
