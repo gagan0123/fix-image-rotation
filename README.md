@@ -1,11 +1,11 @@
 <img src='https://github.com/gagan0123/fix-image-rotation/raw/master/assets/icon-128x128.png' align='right' />
 
 # Fix Image Rotation #
-**Contributors:** [gagan0123](https://profiles.wordpress.org/gagan0123), [shashwatmittal](https://profiles.wordpress.org/shashwatmittal)  
+**Contributors:** [gagan0123](https://profiles.wordpress.org/gagan0123), [shashwatmittal](https://profiles.wordpress.org/shashwatmittal), [markjaquith](https://profiles.wordpress.org/markjaquith)  
 **Tags:** Image Rotation, iPhone  
 **Requires at least:** 3.7  
 **Tested up to:** 4.8.1  
-**Stable tag:** 2.1  
+**Stable tag:** 2.1.1  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -50,6 +50,9 @@ You can even contribute by adding banner images and logos for the plugin. If you
 
 
 ## Changelog ##
+
+### 2.1.1 ###
+* Moved hooks registrations outside constructor.
 
 ### 2.1 ###
 * Updates correct orientation of fixed images in WordPress metadata of the image.
