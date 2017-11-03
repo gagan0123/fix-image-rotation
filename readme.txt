@@ -1,9 +1,9 @@
 === Fix Image Rotation ===
-Contributors: gagan0123, shashwatmittal
+Contributors: gagan0123, shashwatmittal, markjaquith
 Tags: Image Rotation, iPhone
 Requires at least: 3.7
 Tested up to: 4.8.1
-Stable tag: 2.1
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,9 @@ You can even contribute by adding banner images and logos for the plugin. If you
 2. Adding images of different orientations with this plugin.
 
 == Changelog ==
+
+= 2.1.1 =
+* Moved hooks registrations outside constructor.
 
 = 2.1 =
 * Updates correct orientation of fixed images in WordPress metadata of the image.
