@@ -270,7 +270,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 			$editor = wp_get_image_editor( $file );
 
 			// If GD Library is being used, then we need to store metadata to restore later.
-			if ( 'WP_Image_Editor_GD' === get_class( $editor ) ) {
+			if ( 'WP_Image_Editor_GD' === get_class( $editor ) && is_callable( 'wp_read_image_metadata' ) ) {
 				$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
 			}
 
