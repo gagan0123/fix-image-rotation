@@ -94,6 +94,45 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		public function register_hooks() {
 			add_filter( 'wp_handle_upload_prefilter', array( $this, 'filter_wp_handle_upload_prefilter' ), 10, 1 );
 			add_filter( 'wp_handle_upload', array( $this, 'filter_wp_handle_upload' ), 1, 3 );
+			add_action( 'after_plugin_row', array( $this, 'action_after_plugin_row' ), 1, 3 );
+		}
+
+		/**
+		 * Displays status for php-mod exif if enabled or not on server
+		 * This status is displayed in admin area of WP - Plugins List
+		 *
+		 * @since 2.1.2
+		 *
+		 * @access public
+		 *
+		 * @return void
+		 */
+		public function action_after_plugin_row( $plugin_file, $plugin_data, $status ) {
+
+			// exit early if this row does not belong to this plugin
+			if ( $plugin_data['slug'] != stristr(plugin_basename( __FILE__ ), DIRECTORY_SEPARATOR, TRUE ) ) return;
+
+			$php_extension = extension_loaded( 'exif' ) ? 'php exif module loaded' : 'no php exif module';
+			$exif_callable = is_callable( 'exif_read_data' ) ? 'exif_read_data callable' : 'exif_read_data not callable';
+
+			printf( '<style>
+				.exif-status-inline {
+					color: #FFF;
+					font-size: 0.9em;
+					text-transform: uppercase;
+					background-color: #444;
+					padding: 1px 6px;
+					border-radius: 3px;
+					cursor: default;
+				}
+				</style>
+				<tr>
+					<th>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>
+						<span class="exif-status-inline">%s</span> <span class="exif-status-inline">%s</span>
+					</td>
+				</tr>', $php_extension, $exif_callable );
 		}
 
 		/**
