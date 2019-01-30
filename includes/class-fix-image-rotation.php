@@ -276,8 +276,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 					break;
 			}
 
-			$operations = compact( 'orientation', 'rotator', 'flipper' );
-			return $operations;
+			return compact( 'orientation', 'rotator', 'flipper' );
 		}
 
 		/**
