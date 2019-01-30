@@ -157,7 +157,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 */
 		public function filter_wp_handle_upload( $file ) {
 			$suffix = substr( $file['file'], strrpos( $file['file'], '.', -1 ) + 1 );
-			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
+			if ( in_array( strtolower( $suffix ), array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
 				$this->fix_image_orientation( $file['file'] );
 			}
 			return $file;
@@ -179,7 +179,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 */
 		public function filter_wp_handle_upload_prefilter( $file ) {
 			$suffix = substr( $file['name'], strrpos( $file['name'], '.', -1 ) + 1 );
-			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
+			if ( in_array( strtolower( $suffix ), array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
 				$this->fix_image_orientation( $file['tmp_name'] );
 			}
 			return $file;
