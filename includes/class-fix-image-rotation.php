@@ -203,7 +203,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 				if ( isset( $exif ) && isset( $exif['Orientation'] ) && $exif['Orientation'] > 1 ) {
 
 					// Need it so that image editors are available to us.
-					include_once( ABSPATH . 'wp-admin/includes/image-edit.php' );
+					include_once ABSPATH . 'wp-admin/includes/image-edit.php';
 
 					// Calculate the operations we need to perform on the image.
 					$operations = $this->calculate_flip_and_rotate( $file, $exif );
@@ -309,6 +309,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 
 			// If GD Library is being used, then we need to store metadata to restore later.
 			if ( 'WP_Image_Editor_GD' === get_class( $editor ) && is_callable( 'wp_read_image_metadata' ) ) {
+				include_once ABSPATH . 'wp-admin/includes/image.php';
 				$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
 			}
 
