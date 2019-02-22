@@ -107,7 +107,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @param string $plugin_file Path to the plugin file, relative to the plugins directory.
 		 *
-		 * @param array $plugin_data An array of plugin data.
+		 * @param array  $plugin_data An array of plugin data.
 		 *
 		 * @param string $status Status of the plugin.
 		 *
@@ -115,13 +115,13 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 */
 		public function action_after_plugin_row( $plugin_file, $plugin_data, $status ) {
 
-			// exit early if this row does not belong to this plugin
-			if ( $plugin_data['slug'] != stristr( plugin_basename( __FILE__ ), DIRECTORY_SEPARATOR, true ) ) {
+			// exit early if this row does not belong to this plugin.
+			if ( stristr( plugin_basename( __FILE__ ), DIRECTORY_SEPARATOR, true ) !== $plugin_data['slug'] ) {
 				return;
 			}
 
-			$php_extension = extension_loaded( 'exif' ) ? 'php exif module loaded' : 'no php exif module';
-			$exif_callable = is_callable( 'exif_read_data' ) ? 'exif_read_data callable' : 'exif_read_data not callable';
+			$php_extension = extension_loaded( 'exif' ) ? __( 'php exif module loaded', 'fix-image-rotation' ) : __( 'no php exif module', 'fix-image-rotation' );
+			$exif_callable = is_callable( 'exif_read_data' ) ? __( 'exif_read_data callable', 'fix-image-rotation' ) : __( 'exif_read_data not callable', 'fix-image-rotation' );
 
 			printf(
 				'<style>
@@ -142,8 +142,8 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 						<span class="exif-status-inline">%s</span> <span class="exif-status-inline">%s</span>
 					</td>
 				</tr>',
-				$php_extension,
-				$exif_callable
+				esc_html( $php_extension ),
+				esc_html( $exif_callable )
 			);
 		}
 
