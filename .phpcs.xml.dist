@@ -29,5 +29,12 @@
 
 	<!-- Include the WordPress standards. -->
 	<rule ref="WordPress" />
+    
+    <rule ref="WordPress.WP.I18n">
+		<properties>
+			<!-- Value: replace the text domain used. -->
+			<property name="text_domain" type="array" value="fix-image-rotation"/>
+		</properties>
+	</rule>
 
 </ruleset>
