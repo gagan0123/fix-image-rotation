@@ -244,8 +244,9 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 */
 		private function calculate_flip_and_rotate( $file, $exif ) {
 
-			$rotator = false;
-			$flipper = false;
+			$rotator     = false;
+			$flipper     = false;
+			$orientation = 0;
 
 			// Lets switch to the orientation defined in the exif data.
 			switch ( $exif['Orientation'] ) {
