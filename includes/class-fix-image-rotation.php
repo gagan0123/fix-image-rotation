@@ -101,9 +101,15 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * Displays status for php-mod exif if enabled or not on server
 		 * This status is displayed in admin area of WP - Plugins List
 		 *
-		 * @since 2.1.2
+		 * @since 2.2
 		 *
 		 * @access public
+		 *
+		 * @param string $plugin_file Path to the plugin file, relative to the plugins directory.
+		 *
+		 * @param array $plugin_data An array of plugin data.
+		 *
+		 * @param string $status Status of the plugin.
 		 *
 		 * @return void
 		 */
