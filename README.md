@@ -1,11 +1,11 @@
 <img src='https://github.com/gagan0123/fix-image-rotation/raw/master/assets/icon-128x128.png' align='right' />
 
 # Fix Image Rotation #
-**Contributors:** [gagan0123](https://profiles.wordpress.org/gagan0123), [shashwatmittal](https://profiles.wordpress.org/shashwatmittal), [markjaquith](https://profiles.wordpress.org/markjaquith)  
+**Contributors:** [gagan0123](https://profiles.wordpress.org/gagan0123), [shashwatmittal](https://profiles.wordpress.org/shashwatmittal), [markjaquith](https://profiles.wordpress.org/markjaquith), [bgrande](https://profiles.wordpress.org/bgrande)  
 **Tags:** Image Rotation, iPhone  
 **Requires at least:** 3.7  
 **Tested up to:** 4.8.1  
-**Stable tag:** 2.1.1  
+**Stable tag:** 2.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -15,6 +15,14 @@ Fixes the rotation of the images based on EXIF data
 Fix Image Rotation plugin fixes image orientation based on EXIF data. Fixes the mis-oriented images clicked via mobile phones. 
 
 Functionally it filters all uploads and if EXIF->Orientation is set to a number greater than 1, then the image is re-saved with a new orientation before the image is processed by WordPress.
+
+### Special Thanks to ###
+[Shashwat Mittal](https://profiles.wordpress.org/shashwatmittal/) for meta data restoration of rotated images.
+[Mark Jaquith](https://profiles.wordpress.org/markjaquith/) for making the fix image rotation class more useful.
+[@tealborder](https://github.com/tealborder) for adding required library notice in plugins menu.
+[@broberson](https://github.com/broberson) for finding and fixing and issue with the plugin.
+[Benedikt](https://profiles.wordpress.org/bgrande/) for multiple contributions towards betterment of the plugin.
+
 
 ### Contribute ###
 To contribute to the plugin fork the [GitHub Repo](https://github.com/gagan0123/fix-image-rotation), make changes and send pull requests.
@@ -50,6 +58,13 @@ You can even contribute by adding banner images and logos for the plugin. If you
 
 
 ## Changelog ##
+
+### 2.2 ###
+* Adds "PHP EXIF MODULE LOADED" and "EXIF_READ_DATA CALLABLE" below plugin details.
+* Prevent undefined function call to wp_read_image_metadata in rare cases.
+* Handle file endings with uppercase as well.
+* Some performance patches.
+* WordPress Coding Standards compatibility.
 
 ### 2.1.1 ###
 * Moved hooks registrations outside constructor.
