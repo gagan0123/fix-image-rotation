@@ -135,7 +135,9 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 					<td>
 						<span class="exif-status-inline">%s</span> <span class="exif-status-inline">%s</span>
 					</td>
-				</tr>', $php_extension, $exif_callable
+				</tr>',
+				$php_extension,
+				$exif_callable
 			);
 		}
 
