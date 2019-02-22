@@ -16,6 +16,22 @@ module.exports = function ( grunt ) {
 				}
 			}
 		},
+		makepot: {
+			target: {
+				options: {
+					domainPath: '/languages',
+					exclude: [ 'node_modules/.*', 'tests/.*' ],
+					mainFile: '<%= pkg.main %>',
+					potFilename: '<%= pkg.name %>.pot',
+					potHeaders: {
+						poedit: false,
+						'report-msgid-bugs-to': '<%= pkg.bugs.url %>'
+					},
+					type: 'wp-plugin',
+					updateTimestamp: false
+				}
+			}
+		},
 		watch: {
 			grunt: {
 				files: [ 'Gruntfile.js' ]
@@ -29,6 +45,7 @@ module.exports = function ( grunt ) {
 
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
+	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.registerTask( 'default', [
 		'watch'
 	] );

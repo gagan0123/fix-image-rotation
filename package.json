@@ -9,11 +9,15 @@
     "keywords": [
         "wordpress"
     ],
+    "bugs": {
+        "url": "https://github.com/gagan0123/fix-image-rotation/issues"
+    },
     "author": "Gagan Deep Singh",
     "license": "GPL-2.0",
     "devDependencies": {
         "grunt": "^1.0.3",
         "grunt-contrib-watch": "^1.1.0",
+        "grunt-wp-i18n": "^1.0.0",
         "grunt-wp-readme-to-markdown": "^2.0.1"
     },
     "dependencies": {}
