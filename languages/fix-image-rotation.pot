@@ -1,0 +1,57 @@
+# Copyright (C) 2019 Gagan Deep Singh
+# This file is distributed under the GPLv2.
+msgid ""
+msgstr ""
+"Project-Id-Version: Fix Image Rotation 2.2\n"
+"Report-Msgid-Bugs-To: "
+"https://github.com/gagan0123/fix-image-rotation/issues\n"
+"POT-Creation-Date: 2019-02-22 23:11:30+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Poedit: \n"
+"X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: includes/class-fix-image-rotation.php:123
+msgid "php exif module loaded"
+msgstr ""
+
+#: includes/class-fix-image-rotation.php:123
+msgid "no php exif module"
+msgstr ""
+
+#: includes/class-fix-image-rotation.php:124
+msgid "exif_read_data callable"
+msgstr ""
+
+#: includes/class-fix-image-rotation.php:124
+msgid "exif_read_data not callable"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Fix Image Rotation"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/fix-image-rotation/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Fix Image Rotation plugin fixes image orientation based on EXIF data.  This "
+"is primarily a patch for mis-oriented images delivered from iPhones.  "
+"Functionally it filters all uploads and if EXIF->Orientation is set to a "
+"number greater than 1, then the image is resaved with a new orientation "
+"before the image is processed by WordPress."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Gagan Deep Singh"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://gagan.pro"
+msgstr ""
