@@ -116,7 +116,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		public function action_after_plugin_row( $plugin_file, $plugin_data, $status ) {
 
 			// exit early if this row does not belong to this plugin.
-			if ( stristr( plugin_basename( __FILE__ ), DIRECTORY_SEPARATOR, true ) !== $plugin_data['slug'] ) {
+			if ( ! isset( $plugin_data['slug'] ) || stristr( plugin_basename( __FILE__ ), DIRECTORY_SEPARATOR, true ) !== $plugin_data['slug'] ) {
 				return;
 			}
 
