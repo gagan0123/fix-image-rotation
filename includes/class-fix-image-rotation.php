@@ -161,7 +161,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 */
 		public function filter_wp_handle_upload( $file ) {
 			$suffix = substr( $file['file'], strrpos( $file['file'], '.', -1 ) + 1 );
-			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
+			if ( in_array( strtolower( $suffix ), array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
 				$this->fix_image_orientation( $file['file'] );
 			}
 			return $file;
@@ -183,7 +183,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 */
 		public function filter_wp_handle_upload_prefilter( $file ) {
 			$suffix = substr( $file['name'], strrpos( $file['name'], '.', -1 ) + 1 );
-			if ( in_array( $suffix, array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
+			if ( in_array( strtolower( $suffix ), array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
 				$this->fix_image_orientation( $file['tmp_name'] );
 			}
 			return $file;
@@ -201,7 +201,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * @return void
 		 */
 		public function fix_image_orientation( $file ) {
-			if ( is_callable( 'exif_read_data' ) && ! isset( $this->orientation_fixed[ $file ] ) ) {
+			if ( ! isset( $this->orientation_fixed[ $file ] ) && is_callable( 'exif_read_data' ) ) {
 				$exif = exif_read_data( $file );
 
 				if ( isset( $exif ) && isset( $exif['Orientation'] ) && $exif['Orientation'] > 1 ) {
@@ -280,8 +280,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 					break;
 			}
 
-			$operations = compact( 'orientation', 'rotator', 'flipper' );
-			return $operations;
+			return compact( 'orientation', 'rotator', 'flipper' );
 		}
 
 		/**
@@ -314,6 +313,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 
 			// If GD Library is being used, then we need to store metadata to restore later.
 			if ( 'WP_Image_Editor_GD' === get_class( $editor ) && is_callable( 'wp_read_image_metadata' ) ) {
+				include_once ABSPATH . 'wp-admin/includes/image.php';
 				$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
 			}
 
