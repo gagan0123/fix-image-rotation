@@ -1,0 +1,19 @@
+stages:
+    - verify
+    - deploy
+
+PHPCS:PHP7.2:MySQL:
+    stage: verify
+    image: gagan0123/php:7.2
+    script:
+        - phpcs
+    allow_failure: true
+
+Deploy:
+    stage: deploy
+    environment: 
+        name: deployment
+    image: gagan0123/svn:latest
+    when: manual
+    script:
+        - bash bin/gitlab-deploy.sh
