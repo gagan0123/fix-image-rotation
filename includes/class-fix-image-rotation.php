@@ -110,12 +110,15 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		public function action_after_plugin_row( $plugin_file, $plugin_data, $status ) {
 
 			// exit early if this row does not belong to this plugin
-			if ( $plugin_data['slug'] != stristr(plugin_basename( __FILE__ ), DIRECTORY_SEPARATOR, TRUE ) ) return;
+			if ( $plugin_data['slug'] != stristr( plugin_basename( __FILE__ ), DIRECTORY_SEPARATOR, true ) ) {
+				return;
+			}
 
 			$php_extension = extension_loaded( 'exif' ) ? 'php exif module loaded' : 'no php exif module';
 			$exif_callable = is_callable( 'exif_read_data' ) ? 'exif_read_data callable' : 'exif_read_data not callable';
 
-			printf( '<style>
+			printf(
+				'<style>
 				.exif-status-inline {
 					color: #FFF;
 					font-size: 0.9em;
@@ -132,7 +135,8 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 					<td>
 						<span class="exif-status-inline">%s</span> <span class="exif-status-inline">%s</span>
 					</td>
-				</tr>', $php_extension, $exif_callable );
+				</tr>', $php_extension, $exif_callable
+			);
 		}
 
 		/**
@@ -203,7 +207,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 				if ( isset( $exif ) && isset( $exif['Orientation'] ) && $exif['Orientation'] > 1 ) {
 
 					// Need it so that image editors are available to us.
-					include_once( ABSPATH . 'wp-admin/includes/image-edit.php' );
+					include_once ABSPATH . 'wp-admin/includes/image-edit.php';
 
 					// Calculate the operations we need to perform on the image.
 					$operations = $this->calculate_flip_and_rotate( $file, $exif );
@@ -239,40 +243,40 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 			switch ( $exif['Orientation'] ) {
 				case 1:
 					// We don't want to fix an already correct image :).
-					$this->orientation_fixed[ $file ]    = true;
+					$this->orientation_fixed[ $file ] = true;
 					return false;
 				case 2:
-					$flipper                             = array( false, true );
+					$flipper = array( false, true );
 					break;
 				case 3:
-					$orientation                         = -180;
-					$rotator                             = true;
+					$orientation = -180;
+					$rotator     = true;
 					break;
 				case 4:
-					$flipper                             = array( true, false );
+					$flipper = array( true, false );
 					break;
 				case 5:
-					$orientation                         = -90;
-					$rotator                             = true;
-					$flipper                             = array( false, true );
+					$orientation = -90;
+					$rotator     = true;
+					$flipper     = array( false, true );
 					break;
 				case 6:
-					$orientation                         = -90;
-					$rotator                             = true;
+					$orientation = -90;
+					$rotator     = true;
 					break;
 				case 7:
-					$orientation                         = -270;
-					$rotator                             = true;
-					$flipper                             = array( false, true );
+					$orientation = -270;
+					$rotator     = true;
+					$flipper     = array( false, true );
 					break;
 				case 8:
 				case 9:
-					$orientation                         = -270;
-					$rotator                             = true;
+					$orientation = -270;
+					$rotator     = true;
 					break;
 				default:
-					$orientation                         = 0;
-					$rotator                             = true;
+					$orientation = 0;
+					$rotator     = true;
 					break;
 			}
 
