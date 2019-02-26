@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Fix Image Rotation 2.2\n"
 "Report-Msgid-Bugs-To: "
 "https://github.com/gagan0123/fix-image-rotation/issues\n"
-"POT-Creation-Date: 2019-02-26 21:30:39+00:00\n"
+"POT-Creation-Date: 2019-02-26 21:43:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,16 +15,16 @@ msgstr ""
 "Poedit: \n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: includes/class-fix-image-rotation.php:115
+#: includes/class-fix-image-rotation.php:116
 msgid ""
 "Fix Image Rotation plugin will not work because Exif extension is not "
 "loaded in PHP, please contact your hosting provider for help."
 msgstr ""
 
-#: includes/class-fix-image-rotation.php:117
+#: includes/class-fix-image-rotation.php:118
 msgid ""
-"Fix Image Rotation plugin will not work because function exif_read_data is "
-"not callable, please contact your hosting provider for help."
+"Fix Image Rotation plugin will not work because function exif_read_data "
+"does not exist, please contact your hosting provider for help."
 msgstr ""
 
 #. Plugin Name of the plugin/theme
