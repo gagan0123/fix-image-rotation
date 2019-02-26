@@ -56,7 +56,7 @@ You can even contribute by adding banner images and logos for the plugin. If you
 
 = 2.2.1 =
 * Remove extra rows below plugin details.
-* Add admin notice if exif extension not loaded or exif_read_data not callable.
+* Add admin notice if exif extension not loaded or exif_read_data function does not exist or is disabled.
 
 = 2.2 =
 * Adds "PHP EXIF MODULE LOADED" and "EXIF_READ_DATA CALLABLE" below plugin details.
