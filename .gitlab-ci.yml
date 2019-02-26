@@ -15,4 +15,4 @@ Deploy:
     image: gagan0123/svn:latest
     when: manual
     script:
-        - bash bin/gitlab-deploy.sh
+        - bash bin/release-plugin.sh
