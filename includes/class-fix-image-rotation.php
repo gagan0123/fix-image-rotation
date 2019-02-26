@@ -92,59 +92,38 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * @return void
 		 */
 		public function register_hooks() {
-			add_filter( 'wp_handle_upload_prefilter', array( $this, 'filter_wp_handle_upload_prefilter' ), 10, 1 );
-			add_filter( 'wp_handle_upload', array( $this, 'filter_wp_handle_upload' ), 1, 3 );
-			add_action( 'after_plugin_row', array( $this, 'action_after_plugin_row' ), 1, 3 );
+			if ( extension_loaded( 'exif' ) && is_callable( 'exif_read_data' ) ) {
+				add_filter( 'wp_handle_upload_prefilter', array( $this, 'filter_wp_handle_upload_prefilter' ), 10, 1 );
+				add_filter( 'wp_handle_upload', array( $this, 'filter_wp_handle_upload' ), 1, 3 );
+			} else {
+				add_action( 'admin_notices', array( $this, 'display_exif_error' ) );
+			}
 		}
 
 		/**
-		 * Displays status for php-mod exif if enabled or not on server
-		 * This status is displayed in admin area of WP - Plugins List
+		 * Displays error message if exif extension is not enabled for PHP
 		 *
-		 * @since 2.2
+		 * @since 2.2.1
 		 *
 		 * @access public
 		 *
-		 * @param string $plugin_file Path to the plugin file, relative to the plugins directory.
-		 *
-		 * @param array  $plugin_data An array of plugin data.
-		 *
-		 * @param string $status Status of the plugin.
-		 *
 		 * @return void
 		 */
-		public function action_after_plugin_row( $plugin_file, $plugin_data, $status ) {
-
-			// exit early if this row does not belong to this plugin.
-			if ( ! isset( $plugin_data['slug'] ) || stristr( plugin_basename( __FILE__ ), DIRECTORY_SEPARATOR, true ) !== $plugin_data['slug'] ) {
+		public function display_exif_error() {
+			$message = '';
+			if ( ! extension_loaded( 'exif' ) ) {
+				$message = __( 'Fix Image Rotation plugin will not work because Exif extension is not loaded in PHP, please contact your hosting provider for help.', 'fix-image-rotation' );
+			} elseif ( ! is_callable( 'exif_read_data' ) ) {
+				$message = __( 'Fix Image Rotation plugin will not work because function exif_read_data is not callable, please contact your hosting provider for help.', 'fix-image-rotation' );
+			}
+			if ( empty( $message ) ) {
 				return;
 			}
-
-			$php_extension = extension_loaded( 'exif' ) ? __( 'php exif module loaded', 'fix-image-rotation' ) : __( 'no php exif module', 'fix-image-rotation' );
-			$exif_callable = is_callable( 'exif_read_data' ) ? __( 'exif_read_data callable', 'fix-image-rotation' ) : __( 'exif_read_data not callable', 'fix-image-rotation' );
-
-			printf(
-				'<style>
-				.exif-status-inline {
-					color: #FFF;
-					font-size: 0.9em;
-					text-transform: uppercase;
-					background-color: #444;
-					padding: 1px 6px;
-					border-radius: 3px;
-					cursor: default;
-				}
-				</style>
-				<tr>
-					<th>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>
-						<span class="exif-status-inline">%s</span> <span class="exif-status-inline">%s</span>
-					</td>
-				</tr>',
-				esc_html( $php_extension ),
-				esc_html( $exif_callable )
-			);
+			?>
+			<div class="error notice">
+				<p><?php echo esc_html( $message ); ?></p>
+			</div>
+			<?php
 		}
 
 		/**
@@ -209,7 +188,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * @return void
 		 */
 		public function fix_image_orientation( $file ) {
-			if ( ! isset( $this->orientation_fixed[ $file ] ) && is_callable( 'exif_read_data' ) ) {
+			if ( ! isset( $this->orientation_fixed[ $file ] ) ) {
 				$exif = exif_read_data( $file );
 
 				if ( isset( $exif ) && isset( $exif['Orientation'] ) && $exif['Orientation'] > 1 ) {
