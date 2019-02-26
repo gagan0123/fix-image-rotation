@@ -92,6 +92,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * @return void
 		 */
 		public function register_hooks() {
+			/* Using function_exists as its faster and also checks if function is disabled. */
 			if ( extension_loaded( 'exif' ) && function_exists( 'exif_read_data' ) ) {
 				add_filter( 'wp_handle_upload_prefilter', array( $this, 'filter_wp_handle_upload_prefilter' ), 10, 1 );
 				add_filter( 'wp_handle_upload', array( $this, 'filter_wp_handle_upload' ), 1, 3 );
