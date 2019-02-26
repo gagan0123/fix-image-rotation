@@ -2,6 +2,7 @@
 
 # Fix Image Rotation #
 **Contributors:** [gagan0123](https://profiles.wordpress.org/gagan0123), [shashwatmittal](https://profiles.wordpress.org/shashwatmittal), [markjaquith](https://profiles.wordpress.org/markjaquith), [bgrande](https://profiles.wordpress.org/bgrande)  
+**Donate Link:** https://PayPal.me/gagan0123  
 **Tags:** Image Rotation, iPhone  
 **Requires at least:** 3.7  
 **Requires PHP:** 5.6  
