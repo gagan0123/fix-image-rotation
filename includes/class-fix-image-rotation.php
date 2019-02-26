@@ -92,7 +92,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * @return void
 		 */
 		public function register_hooks() {
-			if ( extension_loaded( 'exif' ) && is_callable( 'exif_read_data' ) ) {
+			if ( extension_loaded( 'exif' ) && function_exists( 'exif_read_data' ) ) {
 				add_filter( 'wp_handle_upload_prefilter', array( $this, 'filter_wp_handle_upload_prefilter' ), 10, 1 );
 				add_filter( 'wp_handle_upload', array( $this, 'filter_wp_handle_upload' ), 1, 3 );
 			} else {
@@ -113,8 +113,8 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 			$message = '';
 			if ( ! extension_loaded( 'exif' ) ) {
 				$message = __( 'Fix Image Rotation plugin will not work because Exif extension is not loaded in PHP, please contact your hosting provider for help.', 'fix-image-rotation' );
-			} elseif ( ! is_callable( 'exif_read_data' ) ) {
-				$message = __( 'Fix Image Rotation plugin will not work because function exif_read_data is not callable, please contact your hosting provider for help.', 'fix-image-rotation' );
+			} elseif ( ! function_exists( 'exif_read_data' ) ) {
+				$message = __( 'Fix Image Rotation plugin will not work because function exif_read_data does not exist, please contact your hosting provider for help.', 'fix-image-rotation' );
 			}
 			if ( empty( $message ) ) {
 				return;
