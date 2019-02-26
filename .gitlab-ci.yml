@@ -4,7 +4,7 @@ stages:
 
 PHPCS:PHP7.2:MySQL:
     stage: verify
-    image: gagan0123/php:7.2
+    image: wpunit/wpcs
     script:
         - phpcs
 
