@@ -4,7 +4,7 @@ Donate Link: https://PayPal.me/gagan0123
 Tags: Image Rotation, iPhone
 Requires at least: 3.7
 Requires PHP: 5.6
-Tested up to: 5.1
+Tested up to: 5.6
 Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,6 +13,9 @@ Fixes the rotation of the images based on EXIF data
 
 == Description ==
 Fix Image Rotation plugin fixes image orientation based on EXIF data. Fixes the mis-oriented images clicked via mobile phones. 
+
+= IMPORTANT NOTE =
+**This plugin's functionality is merged into WordPress core since version 5.3, yet if you're having issues with images, feel free to install this plugin and see if it works. If not, raise a support ticket, there are instances where some other plugins cause this plugin's functionality to break but we can always figure out a way around it. **
 
 Functionally it filters all uploads and if EXIF->Orientation is set to a number greater than 1, then the image is re-saved with a new orientation before the image is processed by WordPress.
 
@@ -54,6 +57,10 @@ You can even contribute by adding banner images and logos for the plugin. If you
 2. Adding images of different orientations with this plugin.
 
 == Changelog ==
+
+= 2.2.2 =
+* Testing with WordPress 5.6.
+* Updates to readme and let WordPress.org know that the plugin is tested with WordPress 5.6
 
 = 2.2.1 =
 * Remove extra rows below plugin details.
