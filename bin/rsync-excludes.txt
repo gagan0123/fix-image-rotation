@@ -22,3 +22,5 @@ node_modules
 .sass-cache
 .gitlab-ci.yml
 .travis.yml
+.lando.yml
+.lando
