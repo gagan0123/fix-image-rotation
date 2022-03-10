@@ -12,12 +12,11 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Fixes the rotation of the images based on EXIF data
 
 == Description ==
-Fix Image Rotation plugin fixes image orientation based on EXIF data. Fixes the mis-oriented images clicked via mobile phones. 
-
-= IMPORTANT NOTE =
-**This plugin's functionality is merged into WordPress core since version 5.3, yet if you're having issues with images, feel free to install this plugin and see if it works. If not, raise a support ticket, there are instances where some other plugins cause this plugin's functionality to break but we can always figure out a way around it. **
+Fix Image Rotation plugin fixes image orientation based on EXIF data. Fixes the mis-oriented images clicked via mobile phones.
 
 Functionally it filters all uploads and if EXIF->Orientation is set to a number greater than 1, then the image is re-saved with a new orientation before the image is processed by WordPress.
+
+** Though this functionality was implemented in WordPress 5.3, it is still broken in WordPress and does not take care of edge cases that this plugin handles **
 
 = Special Thanks to =
 [Shashwat Mittal](https://profiles.wordpress.org/shashwatmittal/) for meta data restoration of rotated images.
