@@ -15,7 +15,7 @@
     "author": "Gagan Deep Singh",
     "license": "GPL-2.0",
     "devDependencies": {
-        "grunt": "^1.3.0",
+        "grunt": "^1.5.2",
         "grunt-contrib-watch": "^1.1.0",
         "grunt-wp-i18n": "^1.0.0",
         "grunt-wp-readme-to-markdown": "^2.1.0"
