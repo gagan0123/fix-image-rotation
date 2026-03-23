@@ -24,6 +24,9 @@ phpcs.xml
 .phpcs.xml
 node_modules
 vendor
+composer.json
+composer.lock
+phpstan.neon
 .sass-cache
 .gitlab-ci.yml
 .travis.yml
