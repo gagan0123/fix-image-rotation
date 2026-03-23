@@ -19,15 +19,22 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 	class Fix_Image_Rotation {
 
 		/**
+		 * File extensions that support EXIF orientation data.
+		 *
+		 * @since 2.3
+		 *
+		 * @var string[]
+		 */
+		private const SUPPORTED_EXTENSIONS = array( 'jpg', 'jpeg', 'tiff' );
+
+		/**
 		 * Array storing the file names that were processed, as keys.
 		 *
 		 * @since 1.0
 		 *
-		 * @access private
-		 *
-		 * @var array
+		 * @var array<string, bool>
 		 */
-		private $orientation_fixed;
+		private array $orientation_fixed = array();
 
 		/**
 		 * Array storing the meta data of original files in case it
@@ -35,32 +42,18 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 1.0
 		 *
-		 * @access private
-		 *
-		 * @var array
+		 * @var array<string, array>
 		 */
-		private $previous_meta;
+		private array $previous_meta = array();
 
 		/**
 		 * The instance of the class Fix_Image_Rotation
 		 *
 		 * @since 2.0
 		 *
-		 * @access protected
-		 *
-		 * @var Fix_Image_Rotation
+		 * @var ?Fix_Image_Rotation
 		 */
-		protected static $instance = null;
-
-		/**
-		 * Constructs the plugin object and initializes its variables.
-		 *
-		 * @since 1.0
-		 */
-		public function __construct() {
-			$this->orientation_fixed = array();
-			$this->previous_meta     = array();
-		}
+		protected static ?Fix_Image_Rotation $instance = null;
 
 		/**
 		 * Returns the current instance of the class, in case some other
@@ -68,11 +61,9 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 2.0
 		 *
-		 * @access public
-		 *
 		 * @return Fix_Image_Rotation Returns the current instance of the class
 		 */
-		public static function get_instance() {
+		public static function get_instance(): Fix_Image_Rotation {
 
 			// If the single instance hasn't been set, set it now.
 			if ( null === self::$instance ) {
@@ -87,15 +78,13 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 2.0
 		 *
-		 * @access public
-		 *
 		 * @return void
 		 */
-		public function register_hooks() {
+		public function register_hooks(): void {
 			/* Using function_exists as its faster and also checks if function is disabled. */
 			if ( extension_loaded( 'exif' ) && function_exists( 'exif_read_data' ) ) {
 				add_filter( 'wp_handle_upload_prefilter', array( $this, 'filter_wp_handle_upload_prefilter' ), 10, 1 );
-				add_filter( 'wp_handle_upload', array( $this, 'filter_wp_handle_upload' ), 1, 3 );
+				add_filter( 'wp_handle_upload', array( $this, 'filter_wp_handle_upload' ), 1, 1 );
 			} else {
 				add_action( 'admin_notices', array( $this, 'display_exif_error' ) );
 			}
@@ -106,11 +95,9 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 2.2.1
 		 *
-		 * @access public
-		 *
 		 * @return void
 		 */
-		public function display_exif_error() {
+		public function display_exif_error(): void {
 			$message = '';
 			if ( ! extension_loaded( 'exif' ) ) {
 				$message = __( 'Fix Image Rotation plugin will not work because Exif extension is not loaded in PHP, please contact your hosting provider for help.', 'fix-image-rotation' );
@@ -133,8 +120,6 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 1.0
 		 *
-		 * @access public
-		 *
 		 * @hook wp_handle_upload
 		 *
 		 * @param array $file {
@@ -147,9 +132,9 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @return array Array of upload data.
 		 */
-		public function filter_wp_handle_upload( $file ) {
+		public function filter_wp_handle_upload( array $file ): array {
 			$suffix = substr( $file['file'], strrpos( $file['file'], '.', -1 ) + 1 );
-			if ( in_array( strtolower( $suffix ), array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
+			if ( in_array( strtolower( $suffix ), self::SUPPORTED_EXTENSIONS, true ) ) {
 				$this->fix_image_orientation( $file['file'] );
 			}
 			return $file;
@@ -161,17 +146,15 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 1.0
 		 *
-		 * @access public
-		 *
 		 * @hook wp_handle_upload_prefilter
 		 *
 		 * @param array $file An array of data for a single file.
 		 *
 		 * @return array An array of data for a single file.
 		 */
-		public function filter_wp_handle_upload_prefilter( $file ) {
+		public function filter_wp_handle_upload_prefilter( array $file ): array {
 			$suffix = substr( $file['name'], strrpos( $file['name'], '.', -1 ) + 1 );
-			if ( in_array( strtolower( $suffix ), array( 'jpg', 'jpeg', 'tiff' ), true ) ) {
+			if ( in_array( strtolower( $suffix ), self::SUPPORTED_EXTENSIONS, true ) ) {
 				$this->fix_image_orientation( $file['tmp_name'] );
 			}
 			return $file;
@@ -182,13 +165,11 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 1.0
 		 *
-		 * @access public
-		 *
 		 * @param string $file Path of the file.
 		 *
 		 * @return void
 		 */
-		public function fix_image_orientation( $file ) {
+		public function fix_image_orientation( string $file ): void {
 			if ( isset( $this->orientation_fixed[ $file ] ) ) {
 				return;
 			}
@@ -216,16 +197,13 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 2.1
 		 *
-		 * @access private
-		 *
 		 * @param string $file Path of the file.
-		 *
 		 * @param array  $exif Exif data of the image.
 		 *
-		 * @return array|bool Array of operations to be performed on the image,
-		 *                    false if no operations are needed.
+		 * @return array|false Array of operations to be performed on the image,
+		 *                     false if no operations are needed.
 		 */
-		private function calculate_flip_and_rotate( $file, $exif ) {
+		private function calculate_flip_and_rotate( string $file, array $exif ) {
 
 			$rotator     = false;
 			$flipper     = false;
@@ -280,10 +258,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @since 2.1
 		 *
-		 * @access private
-		 *
-		 * @param string $file Path of the file.
-		 *
+		 * @param string $file       Path of the file.
 		 * @param array  $operations {
 		 *      Array of operations to be performed on the image.
 		 *
@@ -299,7 +274,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @return bool Returns true if operations were successful, false otherwise.
 		 */
-		private function do_flip_and_rotate( $file, $operations ) {
+		private function do_flip_and_rotate( string $file, array $operations ): bool {
 
 			$editor = wp_get_image_editor( $file );
 
@@ -369,7 +344,7 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 *
 		 * @return array Image meta data.
 		 */
-		public function restore_meta_data( $meta, $file ) {
+		public function restore_meta_data( array $meta, string $file ): array {
 			if ( isset( $this->previous_meta[ $file ] ) ) {
 				$meta = $this->previous_meta[ $file ];
 
