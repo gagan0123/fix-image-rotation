@@ -1,16 +1,95 @@
+variables:
+    MYSQL_DATABASE: wordpress_tests
+    MYSQL_ROOT_PASSWORD: mysql
+
 stages:
     - verify
+    - test
     - deploy
 
-PHPCS:PHP7.2:MySQL:
+PHPCS:PHP8.2:
     stage: verify
-    image: wpunit/php:wpcs
+    image: gagan0123/php:8.2
     script:
         - phpcs
 
+WP-Latest:PHP7.4:
+    stage: test
+    image: gagan0123/php:7.4
+    services:
+        - mysql:8.0
+    script:
+        - bash bin/install-wp-tests.sh wordpress_tests root mysql mysql latest true
+        - phpunit --configuration phpunit.xml.dist
+
+WP-Latest:PHP8.0:
+    stage: test
+    image: gagan0123/php:8.0
+    services:
+        - mysql:8.0
+    script:
+        - bash bin/install-wp-tests.sh wordpress_tests root mysql mysql latest true
+        - phpunit --configuration phpunit.xml.dist
+
+WP-Latest:PHP8.1:
+    stage: test
+    image: gagan0123/php:8.1
+    services:
+        - mysql:8.0
+    script:
+        - bash bin/install-wp-tests.sh wordpress_tests root mysql mysql latest true
+        - phpunit --configuration phpunit.xml.dist
+
+WP-Latest:PHP8.2:
+    stage: test
+    image: gagan0123/php:8.2
+    services:
+        - mysql:8.0
+    script:
+        - bash bin/install-wp-tests.sh wordpress_tests root mysql mysql latest true
+        - phpunit --configuration phpunit.xml.dist
+
+WP-Latest:PHP8.3:
+    stage: test
+    image: gagan0123/php:8.3
+    services:
+        - mysql:8.0
+    script:
+        - bash bin/install-wp-tests.sh wordpress_tests root mysql mysql latest true
+        - phpunit --configuration phpunit.xml.dist
+
+WP-Latest:PHP8.4:
+    stage: test
+    image: gagan0123/php:8.4
+    services:
+        - mysql:8.0
+    script:
+        - bash bin/install-wp-tests.sh wordpress_tests root mysql mysql latest true
+        - phpunit --configuration phpunit.xml.dist
+    allow_failure: true
+
+WP-Nightly:PHP8.2:
+    stage: test
+    image: gagan0123/php:8.2
+    services:
+        - mysql:8.0
+    script:
+        - bash bin/install-wp-tests.sh wordpress_tests root mysql mysql nightly true
+        - phpunit --configuration phpunit.xml.dist
+    allow_failure: true
+
+WP6.2:PHP7.4:
+    stage: test
+    image: gagan0123/php:7.4
+    services:
+        - mysql:8.0
+    script:
+        - bash bin/install-wp-tests.sh wordpress_tests root mysql mysql 6.2.6 true
+        - phpunit --configuration phpunit.xml.dist
+
 Deploy:
     stage: deploy
-    environment: 
+    environment:
         name: deployment
     image: gagan0123/svn:latest
     when: manual

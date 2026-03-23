@@ -1,0 +1,46 @@
+name: Deploy to WordPress.org
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  deploy:
+    name: Deploy to WordPress.org SVN
+    runs-on: ubuntu-latest
+
+    environment:
+      name: wordpress-org
+      url: https://wordpress.org/plugins/fix-image-rotation/
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify version consistency
+        run: |
+          PLUGIN_VERSION=$(grep -i "Version:" init.php | head -n1 | awk -F':' '{print $2}' | tr -d ' ')
+          README_VERSION=$(grep "^Stable tag:" readme.txt | awk '{print $3}')
+          TAG_VERSION=${GITHUB_REF#refs/tags/}
+
+          echo "Plugin version: $PLUGIN_VERSION"
+          echo "Readme version: $README_VERSION"
+          echo "Tag version: $TAG_VERSION"
+
+          if [ "$PLUGIN_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::Plugin version ($PLUGIN_VERSION) does not match tag ($TAG_VERSION)"
+            exit 1
+          fi
+          if [ "$README_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::Readme stable tag ($README_VERSION) does not match tag ($TAG_VERSION)"
+            exit 1
+          fi
+
+      - name: Deploy to WordPress.org
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: fix-image-rotation
+          ASSETS_DIR: assets
