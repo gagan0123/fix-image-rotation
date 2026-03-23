@@ -81,6 +81,30 @@ Yes! Fork the [GitHub Repo](https://github.com/gagan0123/fix-image-rotation), ma
 ![Adding images of different orientations with this plugin.](https://github.com/gagan0123/fix-image-rotation/raw/master/assets/screenshot-2.png)
 
 
+## Running Tests ##
+
+### Prerequisites ###
+
+* [Lando](https://lando.dev/) installed and the app started (`lando start`)
+
+PHPUnit, Yoast PHPUnit Polyfills, and the WordPress test suite are automatically installed when Lando builds the environment.
+
+### Running Tests ###
+
+```bash
+lando ssh -c "cd /app/wordpress/wp-content/plugins/fix-image-rotation && phpunit --configuration phpunit.xml.dist"
+```
+
+This runs both unit tests and integration tests. The integration tests use real JPEG images with various EXIF orientations located in `tests/test-images/`.
+
+### Required PHP Extensions ###
+
+The following PHP extensions are required and are available by default in the Lando container:
+
+* `exif` — reading EXIF orientation data
+* `gd` — image manipulation
+* `imagick` — image manipulation (alternative to GD)
+
 ## Changelog ##
 
 ### 2.2.2 ###
