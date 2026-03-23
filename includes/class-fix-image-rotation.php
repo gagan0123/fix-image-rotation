@@ -189,22 +189,25 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 		 * @return void
 		 */
 		public function fix_image_orientation( $file ) {
-			if ( ! isset( $this->orientation_fixed[ $file ] ) ) {
-				$exif = exif_read_data( $file );
+			if ( isset( $this->orientation_fixed[ $file ] ) ) {
+				return;
+			}
 
-				if ( isset( $exif ) && isset( $exif['Orientation'] ) && $exif['Orientation'] > 1 ) {
+			$exif = exif_read_data( $file );
 
-					// Need it so that image editors are available to us.
-					include_once ABSPATH . 'wp-admin/includes/image-edit.php';
+			if ( false === $exif || ! isset( $exif['Orientation'] ) || $exif['Orientation'] <= 1 ) {
+				return;
+			}
 
-					// Calculate the operations we need to perform on the image.
-					$operations = $this->calculate_flip_and_rotate( $file, $exif );
+			// Need it so that image editors are available to us.
+			include_once ABSPATH . 'wp-admin/includes/image-edit.php';
 
-					if ( false !== $operations ) {
-						// Lets flip flop and rotate the image as needed.
-						$this->do_flip_and_rotate( $file, $operations );
-					}
-				}
+			// Calculate the operations we need to perform on the image.
+			$operations = $this->calculate_flip_and_rotate( $file, $exif );
+
+			if ( false !== $operations ) {
+				// Lets flip flop and rotate the image as needed.
+				$this->do_flip_and_rotate( $file, $operations );
 			}
 		}
 
@@ -300,26 +303,54 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 
 			$editor = wp_get_image_editor( $file );
 
+			if ( is_wp_error( $editor ) ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging guarded by WP_DEBUG.
+					error_log( 'Fix Image Rotation: Failed to get image editor for ' . $file . ' - ' . $editor->get_error_message() );
+				}
+				return false;
+			}
+
 			// If GD Library is being used, then we need to store metadata to restore later.
-			if ( 'WP_Image_Editor_GD' === get_class( $editor ) ) {
+			if ( $editor instanceof WP_Image_Editor_GD ) {
 				include_once ABSPATH . 'wp-admin/includes/image.php';
 				$this->previous_meta[ $file ] = wp_read_image_metadata( $file );
 			}
 
-			if ( ! is_wp_error( $editor ) ) {
-				// Lets rotate and flip the image based on exif orientation.
-				if ( true === $operations['rotator'] ) {
-					$editor->rotate( $operations['orientation'] );
+			// Lets rotate and flip the image based on exif orientation.
+			if ( true === $operations['rotator'] ) {
+				$result = $editor->rotate( $operations['orientation'] );
+				if ( is_wp_error( $result ) ) {
+					if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging guarded by WP_DEBUG.
+						error_log( 'Fix Image Rotation: Failed to rotate ' . $file . ' - ' . $result->get_error_message() );
+					}
+					return false;
 				}
-				if ( false !== $operations['flipper'] ) {
-					$editor->flip( $operations['flipper'][0], $operations['flipper'][1] );
-				}
-				$editor->save( $file );
-				$this->orientation_fixed[ $file ] = true;
-				add_filter( 'wp_read_image_metadata', array( $this, 'restore_meta_data' ), 10, 2 );
-				return true;
 			}
-			return false;
+			if ( false !== $operations['flipper'] ) {
+				$result = $editor->flip( $operations['flipper'][0], $operations['flipper'][1] );
+				if ( is_wp_error( $result ) ) {
+					if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging guarded by WP_DEBUG.
+						error_log( 'Fix Image Rotation: Failed to flip ' . $file . ' - ' . $result->get_error_message() );
+					}
+					return false;
+				}
+			}
+
+			$saved = $editor->save( $file );
+			if ( is_wp_error( $saved ) ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging guarded by WP_DEBUG.
+					error_log( 'Fix Image Rotation: Failed to save ' . $file . ' - ' . $saved->get_error_message() );
+				}
+				return false;
+			}
+
+			$this->orientation_fixed[ $file ] = true;
+			add_filter( 'wp_read_image_metadata', array( $this, 'restore_meta_data' ), 10, 2 );
+			return true;
 		}
 
 		/**
@@ -348,6 +379,5 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 			}
 			return $meta;
 		}
-
 	}
 }
