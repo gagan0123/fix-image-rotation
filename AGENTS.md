@@ -31,7 +31,7 @@ Gruntfile.js                           # Build tasks: readme-to-markdown, i18n p
 package.json                           # NPM dependencies (Grunt and plugins)
 readme.txt                             # WordPress.org plugin readme
 README.md                              # GitHub readme (generated from readme.txt via Grunt)
-.phpcs.xml.dist                        # PHPCS configuration for WordPress coding standards
+phpcs.xml.dist                         # PHPCS configuration for WordPress coding standards
 .gitlab-ci.yml                         # GitLab CI/CD pipeline (PHPCS + manual deploy)
 .lando.yml                             # Lando local development configuration
 .lando/                                # Lando support files (php.ini, mysql.cnf, wp-cli.yml, xdebug.sh, imagick.sh)
