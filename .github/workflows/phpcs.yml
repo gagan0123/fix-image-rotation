@@ -1,0 +1,34 @@
+name: PHPCS
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  phpcs:
+    name: PHPCS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: cs2pr
+
+      - name: Install PHPCS and WordPress Coding Standards
+        run: |
+          composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require --dev wp-coding-standards/wpcs:"^3.0"
+
+      - name: Run PHPCS
+        run: phpcs --report-full --report-checkstyle=./phpcs-report.xml
+
+      - name: Annotate PHPCS results
+        if: always()
+        run: cs2pr ./phpcs-report.xml
