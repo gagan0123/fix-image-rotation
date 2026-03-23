@@ -10,30 +10,26 @@ This document outlines planned improvements for the next release of the Fix Imag
 - [x] Sync `package.json` version with plugin version (`2.0.0` → `2.2.2`)
 - [x] Rename `.phpcs.xml.dist` → `phpcs.xml.dist`, add `wordpress/`/`vendor/`/`docs/` exclusions, add `minimum_supported_wp_version`, fix deprecated text_domain syntax
 
-## 2. Add Automated Tests (PHPUnit)
+## ~~2. Add Automated Tests (PHPUnit)~~ (Done)
 
-The plugin has test images (`tests/test-images/`) but no automated test suite.
+- [x] Set up PHPUnit with WordPress test framework (`phpunit.xml.dist`, `tests/bootstrap.php`, `bin/install-wp-tests.sh`)
+- [x] Write unit tests (17 tests):
+  - Singleton instantiation and identity
+  - Hook registration with EXIF extension
+  - File extension filtering (jpg, jpeg, tiff accepted; png, gif, webp skipped; uppercase handled)
+  - `calculate_flip_and_rotate()` — all 8 EXIF orientations via data provider
+  - `restore_meta_data()` — passthrough when no previous meta
+- [x] Write integration tests (16 tests):
+  - All landscape and portrait test images (orientations 2–8) rotated successfully
+  - Orientation 1 images left unmodified
+  - Duplicate processing prevention verified
+- [x] All 33 tests passing with 48 assertions
 
-- [ ] Add `composer.json` with `phpunit`, `wp-phpunit`, and `brain/monkey` (or `wp-env`) as dev dependencies
-- [ ] Set up PHPUnit bootstrap with WordPress test framework
-- [ ] Write unit tests:
-  - `calculate_flip_and_rotate()` — verify correct rotation/flip values for each EXIF orientation (1–8)
-  - `restore_meta_data()` — verify metadata restoration with correct orientation reset
-  - `filter_wp_handle_upload_prefilter()` / `filter_wp_handle_upload()` — verify file extension filtering (jpg, jpeg, tiff accepted; png, gif, webp skipped)
-  - `display_exif_error()` — verify correct error messages when EXIF unavailable
-- [ ] Write integration tests:
-  - Upload test images (from `tests/test-images/`) through the WordPress upload pipeline and verify orientation is corrected
-  - Test with both GD and Imagick image editors
-  - Verify metadata is preserved after rotation (GD path)
-- [ ] Add `phpunit.xml.dist` configuration file
+## ~~3. Set Up GitHub Actions CI~~ (Done)
 
-## 3. Set Up GitHub Actions CI
-
-Replace GitLab CI (`.gitlab-ci.yml`) with GitHub Actions since GitHub is the primary repository.
-
-- [ ] Create `.github/workflows/phpcs.yml` — run PHPCS on every push/PR
-- [ ] Create `.github/workflows/tests.yml` — run PHPUnit on a matrix of PHP versions (7.4, 8.0, 8.1, 8.2, 8.3) and WordPress versions (latest, latest-1)
-- [ ] Remove `.gitlab-ci.yml` once GitHub Actions are in place
+- [x] Create `.github/workflows/phpcs.yml` — PHPCS on every push/PR with checkstyle annotations
+- [x] Create `.github/workflows/tests.yml` — PHPUnit on PHP 7.4–8.3 matrix with WP latest, 6.2, and nightly
+- [ ] Remove `.gitlab-ci.yml` once GitHub Actions are verified working
 - [ ] Add status badges to README
 
 ## 4. Add WebP and AVIF Support
@@ -79,12 +75,15 @@ Adopt modern PHP patterns while keeping the minimum PHP requirement at 7.4.
 - [ ] Automate version bumping across `init.php`, `readme.txt`, and `package.json`
 - [ ] Add a GitHub Actions release workflow that deploys to WordPress.org SVN on tag push
 
-## 9. Update Plugin Documentation
+## ~~9. Update Plugin Documentation~~ (Done)
 
-- [ ] Update `readme.txt` description to better explain why the plugin is still needed despite WordPress 5.3+ handling
+- [x] Rewrite `readme.txt` description to explain why the plugin is still needed despite WordPress 5.3+
+- [x] Add supported image formats and requirements sections
+- [x] Update the `== Installation ==` section with modern instructions
+- [x] Add FAQ entry about EXIF extension not being available
+- [x] Regenerate `README.md` from `readme.txt`
+- [x] Update `rsync-excludes.txt` to exclude new dev files (`.github/`, `docs/`, `AGENTS.md`, `vendor/`, etc.)
 - [ ] Add a FAQ entry about WebP/AVIF support (once implemented)
-- [ ] Update the `== Installation ==` section with modern instructions
-- [ ] Regenerate `README.md` from `readme.txt` after updates
 
 ## 10. Housekeeping
 
@@ -101,9 +100,9 @@ Adopt modern PHP patterns while keeping the minimum PHP requirement at 7.4.
 |----------|------|-----------|
 | ~~P0~~ | ~~1. Update compatibility versions~~ | ~~Done~~ |
 | ~~P0~~ | ~~7. Fix error handling bugs~~ | ~~Done~~ |
-| P1 | 2. Automated tests | Foundation for safe refactoring |
-| P1 | 3. GitHub Actions CI | Ensures quality on every PR |
-| P1 | 9. Update documentation | Accompanies the new release |
+| ~~P1~~ | ~~2. Automated tests~~ | ~~Done — 33 tests, 48 assertions~~ |
+| ~~P1~~ | ~~3. GitHub Actions CI~~ | ~~Done — PHPCS + PHPUnit matrix~~ |
+| ~~P1~~ | ~~9. Update documentation~~ | ~~Done~~ |
 | P2 | 4. WebP/AVIF support | Most impactful new feature |
 | P2 | 5. Modernize PHP | Better DX, type safety |
 | P2 | 6. Static analysis | Catches bugs early |
