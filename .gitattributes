@@ -1,0 +1,34 @@
+# Auto detect text files and normalise line endings
+* text=auto eol=lf
+
+# Denote binary files
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
+
+# Export ignore (files excluded from release archives)
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.github/ export-ignore
+/.gitlab-ci.yml export-ignore
+/.lando.yml export-ignore
+/.lando/ export-ignore
+/AGENTS.md export-ignore
+/Gruntfile.js export-ignore
+/bin/ export-ignore
+/composer.json export-ignore
+/composer.lock export-ignore
+/docs/ export-ignore
+/node_modules/ export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/phpcs.xml.dist export-ignore
+/phpstan.neon export-ignore
+/phpunit.xml.dist export-ignore
+/tests/ export-ignore
+/vendor/ export-ignore
