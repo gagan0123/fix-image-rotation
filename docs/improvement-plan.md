@@ -32,32 +32,32 @@ This document outlines planned improvements for the next release of the Fix Imag
 - [ ] Remove `.gitlab-ci.yml` once GitHub Actions are verified working
 - [ ] Add status badges to README
 
-## 4. Add WebP and AVIF Support
+## 4. Add WebP and AVIF Support (Deferred)
 
-Modern image formats are now common in WordPress (WebP since WP 5.8, AVIF since WP 6.5). Both formats support EXIF metadata.
+**Research findings:** PHP's `exif_read_data()` does **not** work with WebP or AVIF in practice (tested on PHP 8.2). While Imagick can read EXIF profiles from these formats, PHP's native function returns `false`. Both GD and Imagick support reading/writing WebP and AVIF images, but the EXIF orientation data is inaccessible through `exif_read_data()`.
 
-- [ ] Research EXIF support in WebP and AVIF (PHP's `exif_read_data()` added WebP support in PHP 7.2)
-- [ ] Add `webp` to the allowed file extensions list if `exif_read_data()` can handle it
-- [ ] Add `avif` to the allowed file extensions list if supported
-- [ ] Add test images in WebP/AVIF formats with EXIF orientation data
-- [ ] Test with both GD and Imagick editors
+Adding support would require an Imagick-based fallback EXIF reader, which is a larger architectural change deferred to a future release.
 
-## 5. Modernize PHP Code
+- [x] Research EXIF support in WebP and AVIF — **not feasible with `exif_read_data()`**
+- [ ] (Future) Implement Imagick-based EXIF orientation reader as fallback
+- [ ] (Future) Add `webp` and `avif` to allowed extensions with Imagick fallback
+- [ ] (Future) Add test images in WebP/AVIF formats
 
-Adopt modern PHP patterns while keeping the minimum PHP requirement at 7.4.
+## ~~5. Modernize PHP Code~~ (Done)
 
-- [ ] Add type declarations to method parameters and return types
-- [ ] Replace `array()` with short array syntax `[]`
-- [ ] Use null coalescing operator (`??`) and null safe operator (`?->`) where appropriate
-- [ ] Add typed class properties (PHP 7.4+)
-- [ ] Consider replacing singleton pattern with a simple function-based initialization (more WordPress-idiomatic)
+- [x] Add type declarations to all method parameters and return types
+- [x] Add typed class properties with default values (PHP 7.4+)
+- [x] Extract supported extensions to a class constant (`SUPPORTED_EXTENSIONS`)
+- [x] Remove unnecessary constructor (properties use inline defaults)
+- [x] Fix `add_filter` accepted_args from 3 to 1 (callback only uses first param)
+- Note: Short array syntax `[]` not used — WordPress Coding Standards disallow it
 
-## 6. Add Static Analysis
+## ~~6. Add Static Analysis~~ (Done)
 
-- [ ] Add `composer.json` with `phpstan/phpstan` and `szepeviktor/phpstan-wordpress` as dev dependencies
-- [ ] Create `phpstan.neon` configuration targeting level 5+ (increase over time)
-- [ ] Add PHPStan to the GitHub Actions CI pipeline
-- [ ] Fix any issues found during initial analysis
+- [x] Add `composer.json` with `phpstan/phpstan` and `szepeviktor/phpstan-wordpress` as dev dependencies
+- [x] Create `phpstan.neon` configuration at level 5
+- [x] Add PHPStan GitHub Actions workflow
+- [x] Clean pass at level 5 — no errors
 
 ## ~~7. Improve Error Handling~~ (Done)
 
@@ -103,9 +103,9 @@ Adopt modern PHP patterns while keeping the minimum PHP requirement at 7.4.
 | ~~P1~~ | ~~2. Automated tests~~ | ~~Done — 33 tests, 48 assertions~~ |
 | ~~P1~~ | ~~3. GitHub Actions CI~~ | ~~Done — PHPCS + PHPUnit matrix~~ |
 | ~~P1~~ | ~~9. Update documentation~~ | ~~Done~~ |
-| P2 | 4. WebP/AVIF support | Most impactful new feature |
-| P2 | 5. Modernize PHP | Better DX, type safety |
-| P2 | 6. Static analysis | Catches bugs early |
+| P2 | 4. WebP/AVIF support | Deferred — `exif_read_data()` doesn't support WebP/AVIF |
+| ~~P2~~ | ~~5. Modernize PHP~~ | ~~Done — typed properties, return types, const~~ |
+| ~~P2~~ | ~~6. Static analysis~~ | ~~Done — PHPStan level 5, clean pass~~ |
 | P3 | 8. Build & release tooling | Nice-to-have automation |
 | P3 | 10. Housekeeping | Contributor experience |
 
