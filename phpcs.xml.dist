@@ -15,25 +15,25 @@
 	<!-- Exclude index.php files kept only to prevent directory listing. -->
 	<exclude-pattern>*/index.php</exclude-pattern>
 
-	<!-- Exclude the Node Modules directory. -->
+	<!-- Exclude directories that are not part of the plugin. -->
 	<exclude-pattern>/node_modules/*</exclude-pattern>
-
-	<!-- Exclude the tests directory. -->
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/wordpress/*</exclude-pattern>
 	<exclude-pattern>/tests/*</exclude-pattern>
-
-	<!-- Exclude the bin directory. -->
 	<exclude-pattern>/bin/*</exclude-pattern>
-
-	<!-- Exclude Gruntfile.js. -->
+	<exclude-pattern>/docs/*</exclude-pattern>
 	<exclude-pattern>Gruntfile.js</exclude-pattern>
 
 	<!-- Include the WordPress standards. -->
 	<rule ref="WordPress" />
-    
-    <rule ref="WordPress.WP.I18n">
+
+	<config name="minimum_supported_wp_version" value="6.2"/>
+
+	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<!-- Value: replace the text domain used. -->
-			<property name="text_domain" type="array" value="fix-image-rotation"/>
+			<property name="text_domain" type="array">
+				<element value="fix-image-rotation"/>
+			</property>
 		</properties>
 	</rule>
 

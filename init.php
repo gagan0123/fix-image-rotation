@@ -10,6 +10,8 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: fix-image-rotation
  * Domain Path: /languages
+ * Requires at least: 6.2
+ * Requires PHP: 7.4
  *
  * @package Fix_Image_Rotation
  */

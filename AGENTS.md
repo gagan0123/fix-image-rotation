@@ -6,8 +6,8 @@ A WordPress plugin that automatically fixes image orientation based on EXIF data
 
 - **Slug**: `fix-image-rotation`
 - **Text Domain**: `fix-image-rotation`
-- **Minimum WordPress**: 3.7
-- **Minimum PHP**: 5.6
+- **Minimum WordPress**: 6.2
+- **Minimum PHP**: 7.4
 - **Versioning**: [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH)
 - **License**: GPLv2
 
