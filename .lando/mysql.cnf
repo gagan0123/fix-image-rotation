@@ -1,0 +1,4 @@
+[mysqld]
+disable_log_bin
+innodb_buffer_pool_size = 1G
+innodb_buffer_pool_instances = 1
