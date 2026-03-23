@@ -67,13 +67,13 @@ Adding support would require an Imagick-based fallback EXIF reader, which is a l
 - [x] Log rotation failures via `error_log()` when `WP_DEBUG` is enabled
 - [x] Handle `$editor->rotate()`, `$editor->flip()`, and `$editor->save()` return values (all can return `WP_Error`)
 
-## 8. Improve Build & Release Tooling
+## ~~8. Improve Build & Release Tooling~~ (Done)
 
-- [ ] Add a `composer.json` for PHP dependency management (PHPUnit, PHPStan, PHPCS)
-- [ ] Consider replacing Grunt with npm scripts (the two Grunt tasks — readme conversion and i18n pot generation — can be done via standalone CLI tools)
-- [ ] Add a `.wp-env.json` as an alternative local dev option (simpler than Lando for quick testing)
-- [ ] Automate version bumping across `init.php`, `readme.txt`, and `package.json`
-- [ ] Add a GitHub Actions release workflow that deploys to WordPress.org SVN on tag push
+- [x] Add `composer.json` for PHP dependency management (PHPStan)
+- [x] Add GitHub Actions release workflow (`deploy.yml`) — deploys to WordPress.org SVN on tag push via `10up/action-wordpress-plugin-deploy`, with version consistency verification
+- [x] Update GitLab CI — add PHPUnit test matrix (PHP 7.4–8.4, WP latest/nightly/6.2), update PHPCS to PHP 8.2
+- [ ] Consider replacing Grunt with npm scripts (deferred — low priority)
+- [ ] Add `.wp-env.json` as alternative local dev option (deferred)
 
 ## ~~9. Update Plugin Documentation~~ (Done)
 
@@ -85,12 +85,12 @@ Adding support would require an Imagick-based fallback EXIF reader, which is a l
 - [x] Update `rsync-excludes.txt` to exclude new dev files (`.github/`, `docs/`, `AGENTS.md`, `vendor/`, etc.)
 - [ ] Add a FAQ entry about WebP/AVIF support (once implemented)
 
-## 10. Housekeeping
+## ~~10. Housekeeping~~ (Done)
 
-- [ ] Add `.editorconfig` for consistent editor settings across contributors
-- [ ] Add `.gitattributes` to mark binary files and enforce line endings
-- [ ] Update `.gitignore` to include `vendor/`
-- [ ] Update `rsync-excludes.txt` to exclude new dev files (`docs/`, `composer.json`, `composer.lock`, `phpstan.neon`, `phpunit.xml.dist`, `.github/`, etc.)
+- [x] Add `.editorconfig` for consistent editor settings across contributors
+- [x] Add `.gitattributes` to mark binary files, enforce line endings, and define export-ignore
+- [x] Update `.gitignore` to include `vendor/`
+- [x] Update `rsync-excludes.txt` to exclude all dev files
 
 ---
 
@@ -106,8 +106,8 @@ Adding support would require an Imagick-based fallback EXIF reader, which is a l
 | P2 | 4. WebP/AVIF support | Deferred — `exif_read_data()` doesn't support WebP/AVIF |
 | ~~P2~~ | ~~5. Modernize PHP~~ | ~~Done — typed properties, return types, const~~ |
 | ~~P2~~ | ~~6. Static analysis~~ | ~~Done — PHPStan level 5, clean pass~~ |
-| P3 | 8. Build & release tooling | Nice-to-have automation |
-| P3 | 10. Housekeeping | Contributor experience |
+| ~~P3~~ | ~~8. Build & release tooling~~ | ~~Done — GH Actions deploy, GitLab CI tests~~ |
+| ~~P3~~ | ~~10. Housekeeping~~ | ~~Done — .editorconfig, .gitattributes~~ |
 
 ## Target Release
 
