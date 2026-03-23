@@ -2,12 +2,13 @@
 
 This document outlines planned improvements for the next release of the Fix Image Rotation plugin.
 
-## 1. Update WordPress & PHP Compatibility
+## ~~1. Update WordPress & PHP Compatibility~~ (Done)
 
-- [ ] Bump `Requires PHP` from `5.6` to `7.4` (WordPress 6.7 itself requires PHP 7.2.24+, and 7.4 is a reasonable baseline for modern hosting)
-- [ ] Bump `Requires at least` from `3.7` to `6.2`
-- [ ] Bump `Tested up to` to the latest WordPress version
-- [ ] Sync `package.json` version with plugin version (currently `2.0.0` vs `2.2.2`)
+- [x] Bump `Requires PHP` from `5.6` to `7.4`
+- [x] Bump `Requires at least` from `3.7` to `6.2`
+- [x] Bump `Tested up to` to `6.9`
+- [x] Sync `package.json` version with plugin version (`2.0.0` → `2.2.2`)
+- [x] Rename `.phpcs.xml.dist` → `phpcs.xml.dist`, add `wordpress/`/`vendor/`/`docs/` exclusions, add `minimum_supported_wp_version`, fix deprecated text_domain syntax
 
 ## 2. Add Automated Tests (PHPUnit)
 
@@ -62,12 +63,13 @@ Adopt modern PHP patterns while keeping the minimum PHP requirement at 7.4.
 - [ ] Add PHPStan to the GitHub Actions CI pipeline
 - [ ] Fix any issues found during initial analysis
 
-## 7. Improve Error Handling
+## ~~7. Improve Error Handling~~ (Done)
 
-- [ ] Check `is_wp_error( $editor )` before calling `get_class( $editor )` in `do_flip_and_rotate()` (currently checks after)
-- [ ] Handle `exif_read_data()` returning `false` gracefully (currently only checks `isset`)
-- [ ] Log rotation failures via `error_log()` or `wp_trigger_error()` when `WP_DEBUG` is enabled
-- [ ] Handle `$editor->rotate()` and `$editor->flip()` return values (both can return `WP_Error`)
+- [x] Check `is_wp_error( $editor )` before calling `get_class( $editor )` in `do_flip_and_rotate()`
+- [x] Use `instanceof WP_Image_Editor_GD` instead of `get_class()` comparison
+- [x] Handle `exif_read_data()` returning `false` gracefully
+- [x] Log rotation failures via `error_log()` when `WP_DEBUG` is enabled
+- [x] Handle `$editor->rotate()`, `$editor->flip()`, and `$editor->save()` return values (all can return `WP_Error`)
 
 ## 8. Improve Build & Release Tooling
 
@@ -97,8 +99,8 @@ Adopt modern PHP patterns while keeping the minimum PHP requirement at 7.4.
 
 | Priority | Item | Rationale |
 |----------|------|-----------|
-| P0 | 1. Update compatibility versions | Users see outdated "Tested up to" and skip the plugin |
-| P0 | 7. Fix error handling bugs | `is_wp_error` check is in wrong order — potential fatal |
+| ~~P0~~ | ~~1. Update compatibility versions~~ | ~~Done~~ |
+| ~~P0~~ | ~~7. Fix error handling bugs~~ | ~~Done~~ |
 | P1 | 2. Automated tests | Foundation for safe refactoring |
 | P1 | 3. GitHub Actions CI | Ensures quality on every PR |
 | P1 | 9. Update documentation | Accompanies the new release |
