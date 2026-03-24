@@ -32,7 +32,8 @@ An Architecture Decision Record (ADR) captures an important architecture decisio
 
 ### Quality & CI/CD
 
-- [Bump minimum PHP 7.4 and WordPress 6.2](2026-03-23-bump-minimum-php-74-and-wordpress-62.md) (accepted, 2026-03-23)
+- [Bump minimum PHP 7.4 and WordPress 6.2](2026-03-23-bump-minimum-php-74-and-wordpress-62.md) (superseded, 2026-03-23)
+- [Revert minimum PHP to 5.6](2026-03-25-revert-minimum-php-to-56.md) (accepted, 2026-03-25)
 - [Adopt PHPUnit with WordPress test framework](2026-03-23-adopt-phpunit-with-wordpress-test-framework.md) (accepted, 2026-03-23)
 - [Adopt GitHub Actions for CI/CD](2026-03-23-adopt-github-actions-for-ci.md) (accepted, 2026-03-23)
 - [Adopt PHPStan at level 5](2026-03-24-adopt-phpstan-at-level-5.md) (accepted, 2026-03-24)

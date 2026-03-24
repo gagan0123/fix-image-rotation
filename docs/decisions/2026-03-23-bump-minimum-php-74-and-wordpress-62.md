@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by [Revert minimum PHP to 5.6](2026-03-25-revert-minimum-php-to-56.md)
 date: 2026-03-23
 decision-makers: Gagan Deep Singh
 ---

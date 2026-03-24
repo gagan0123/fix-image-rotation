@@ -6,8 +6,8 @@ A WordPress plugin that automatically fixes image orientation based on EXIF data
 
 - **Slug**: `fix-image-rotation`
 - **Text Domain**: `fix-image-rotation`
-- **Minimum WordPress**: 6.2
-- **Minimum PHP**: 7.4
+- **Minimum WordPress**: 3.7
+- **Minimum PHP**: 5.6
 - **Versioning**: [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH)
 - **License**: GPLv2
 
@@ -159,11 +159,20 @@ Lando is used for local development (`lando start`). All commands run inside the
 - **URL**: https://fix-image-rotation.lndo.site/
 - **Admin login**: admin / password
 - **Stack**: PHP 8.2, Node 22, MariaDB, nginx — all in a single appserver container
-- **Tooling**: `lando npm`, `lando node`, `lando wp`, `lando phpcs`, `lando phpcbf`, `lando xdebug <mode>`, `lando imagick`
+- **Tooling**: `lando npm`, `lando node`, `lando wp`, `lando phpunit`, `lando phpcs`, `lando phpcbf`, `lando xdebug <mode>`, `lando imagick`
 - **Xdebug**: Disabled by default; enable with `lando xdebug debug` (or `profile`, `trace`)
 - **Imagick**: Toggle with `lando imagick` (enable) / `lando imagick off` (disable) — useful for testing GD vs Imagick codepaths
 - **Auto-install**: `npm install`, PHPCS with WordPress Coding Standards all install automatically during `lando start` / `lando rebuild`
 - WordPress is installed at `./wordpress/` (gitignored), plugin is mounted into `wp-content/plugins/`
+
+## Testing
+
+Unit tests use the WordPress PHPUnit test suite (`WP_UnitTestCase`). The test database and test library are installed during `lando start` via `bin/install-wp-tests.sh`.
+
+- **Run tests**: `lando phpunit`
+- **Test against a specific WP version**: `lando ssh -c "rm -rf /tmp/wordpress /tmp/wordpress-tests-lib && bash /app/wordpress/wp-content/plugins/fix-image-rotation/bin/install-wp-tests.sh wordpress_tests wordpress wordpress database <version> true && vendor/bin/phpunit"`
+- **Oldest testable WP version**: **5.9** — WordPress added PHPUnit 9 support in 5.9. Versions 5.8 and below require PHPUnit ≤7.x, which is incompatible with the current stack (PHPUnit 9 + Yoast Polyfills 2.x + PHP 8.2). Testing older WP would require a separate environment with PHP 7.4 + PHPUnit 7.
+- **Restore default**: After testing an older version, re-run the install script with `latest` to restore the default test suite.
 
 ## Version Requirements
 

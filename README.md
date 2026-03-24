@@ -4,8 +4,8 @@
 Contributors: gagan0123, shashwatmittal, markjaquith, bgrande
 Donate Link: https://PayPal.me/gagan0123
 Tags: image rotation, exif, orientation, iPhone, upload
-Requires at least: 6.2
-Requires PHP: 7.4
+Requires at least: 3.7
+Requires PHP: 5.6
 Tested up to: 6.9
 Stable tag: 2.2.2
 License: GPLv2 or later
@@ -78,6 +78,18 @@ Yes! Fork the [GitHub Repo](https://github.com/gagan0123/fix-image-rotation), ma
 2. Adding images of different orientations with this plugin.
 
 ## Changelog
+
+### 2.3.0
+* Requires PHP 7.4 or higher (was 5.6).
+* Tested up to WordPress 6.9.
+* Fix: Prevent potential fatal error when image editor fails to load (is_wp_error check was performed after get_class call).
+* Fix: Handle exif_read_data() returning false instead of only checking isset().
+* Fix: Check return values of rotate, flip, and save operations for errors.
+* Added debug logging for all failure points when WP_DEBUG is enabled.
+* Use instanceof for GD Library detection instead of get_class() comparison.
+* Extract supported file extensions to a class constant.
+* Add typed properties and return type declarations (PHP 7.4+).
+* Rewrite plugin description and FAQ for clarity.
 
 ### 2.2.2
 * Testing with WordPress 5.6.
