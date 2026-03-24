@@ -72,7 +72,7 @@ Adding support would require an Imagick-based fallback EXIF reader, which is a l
 - [x] Add `composer.json` for PHP dependency management (PHPStan)
 - [x] Add GitHub Actions release workflow (`deploy.yml`) — deploys to WordPress.org SVN on tag push via `10up/action-wordpress-plugin-deploy`, with version consistency verification
 - [x] Update GitLab CI — add PHPUnit test matrix (PHP 7.4–8.4, WP latest/nightly/6.2), update PHPCS to PHP 8.2
-- [ ] Consider replacing Grunt with npm scripts (deferred — low priority)
+- [x] Replace Grunt with npm scripts — removed all Grunt dependencies (4 packages + 168 transitive), replaced with zero-dependency `scripts/readme-to-markdown.js` and WP-CLI `wp i18n make-pot`. npm audit now reports 0 vulnerabilities (was 9)
 - [ ] Add `.wp-env.json` as alternative local dev option (deferred)
 
 ## ~~9. Update Plugin Documentation~~ (Done)
