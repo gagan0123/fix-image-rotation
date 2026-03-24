@@ -85,6 +85,3 @@ tooling:
     service: appserver
   npm:
     service: appserver
-  grunt:
-    service: appserver
-    cmd: npx grunt

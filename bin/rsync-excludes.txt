@@ -13,7 +13,7 @@ map.conf
 nginx.log
 tests
 docs
-Gruntfile.js
+scripts
 package.json
 package-lock.json
 phpunit.xml

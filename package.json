@@ -14,11 +14,10 @@
     },
     "author": "Gagan Deep Singh",
     "license": "GPL-2.0",
-    "devDependencies": {
-        "grunt": "^1.6.1",
-        "grunt-contrib-watch": "^1.1.0",
-        "grunt-wp-i18n": "^1.0.0",
-        "grunt-wp-readme-to-markdown": "^2.1.0"
+    "scripts": {
+        "readme": "node scripts/readme-to-markdown.js",
+        "makepot": "wp i18n make-pot . languages/fix-image-rotation.pot --exclude=node_modules,vendor,tests,wordpress,docs"
     },
+    "devDependencies": {},
     "dependencies": {}
 }
