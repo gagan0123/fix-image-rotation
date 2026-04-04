@@ -15,8 +15,7 @@ scripts
 package.json
 phpunit.xml
 phpunit.xml.dist
-.phpcs.xml.dist
-.phpcs.xml
+phpcs.xml
 package-lock.json
 node_modules
 .sass-cache

@@ -27,4 +27,4 @@ jobs:
           phpcs --config-set installed_paths "$(composer global config home)/vendor/wp-coding-standards/wpcs"
 
       - name: Run PHPCS
-        run: phpcs --standard=.phpcs.xml.dist --report=checkstyle | cs2pr
+        run: phpcs --report=checkstyle | cs2pr
