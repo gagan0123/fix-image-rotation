@@ -24,16 +24,17 @@
 	<!-- Exclude the bin directory. -->
 	<exclude-pattern>/bin/*</exclude-pattern>
 
-	<!-- Exclude Gruntfile.js. -->
-	<exclude-pattern>Gruntfile.js</exclude-pattern>
+	<!-- Exclude the scripts directory. -->
+	<exclude-pattern>/scripts/*</exclude-pattern>
 
 	<!-- Include the WordPress standards. -->
 	<rule ref="WordPress" />
-    
-    <rule ref="WordPress.WP.I18n">
+
+	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<!-- Value: replace the text domain used. -->
-			<property name="text_domain" type="array" value="fix-image-rotation"/>
+			<property name="text_domain" type="array">
+				<element value="fix-image-rotation"/>
+			</property>
 		</properties>
 	</rule>
 

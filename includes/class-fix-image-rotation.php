@@ -348,6 +348,5 @@ if ( ! class_exists( 'Fix_Image_Rotation' ) ) {
 			}
 			return $meta;
 		}
-
 	}
 }
