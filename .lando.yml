@@ -28,7 +28,7 @@ services:
         - '/app/wordpress/wp-content/plugins/fix-image-rotation/wordpress'
         - '/app/wordpress/wp-content/plugins/fix-image-rotation/node_modules'
     build_as_root:
-      - curl -sL https://deb.nodesource.com/setup_14.x | bash -
+      - curl -sL https://deb.nodesource.com/setup_20.x | bash -
       - apt-get install -y nodejs
     build:
       - wp core download --force --skip-content

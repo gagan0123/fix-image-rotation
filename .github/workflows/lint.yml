@@ -1,0 +1,30 @@
+name: Lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  phpcs:
+    name: PHP Coding Standards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: cs2pr, phpcs
+
+      - name: Install WPCS
+        run: |
+          composer global require wp-coding-standards/wpcs:"^3.0" --no-interaction
+          phpcs --config-set installed_paths "$(composer global config home)/vendor/wp-coding-standards/wpcs"
+
+      - name: Run PHPCS
+        run: phpcs --standard=.phpcs.xml.dist --report=checkstyle | cs2pr

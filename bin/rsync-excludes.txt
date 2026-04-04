@@ -11,7 +11,7 @@ assets
 map.conf
 nginx.log
 tests
-Gruntfile.js
+scripts
 package.json
 phpunit.xml
 phpunit.xml.dist
@@ -20,7 +20,7 @@ phpunit.xml.dist
 package-lock.json
 node_modules
 .sass-cache
-.gitlab-ci.yml
+.github
 .travis.yml
 .lando.yml
 .lando
