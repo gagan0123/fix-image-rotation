@@ -1,0 +1,26 @@
+name: Deploy to WordPress.org
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to SVN
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Deploy to WordPress.org SVN
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_REPO_URL: ${{ secrets.SVN_REPO_URL }}
+          MAINFILE: init.php
+        run: bash bin/release-plugin.sh

@@ -14,11 +14,14 @@
     },
     "author": "Gagan Deep Singh",
     "license": "GPL-2.0",
+    "scripts": {
+        "readme": "node scripts/convert-readme.mjs",
+        "pot": "wpi18n makepot --domain-path=languages --pot-file=fix-image-rotation.pot --main-file=init.php --type=plugin --exclude=node_modules,tests",
+        "build": "npm run pot && npm run readme"
+    },
     "devDependencies": {
-        "grunt": "^1.6.1",
-        "grunt-contrib-watch": "^1.1.0",
-        "grunt-wp-i18n": "^1.0.0",
-        "grunt-wp-readme-to-markdown": "^2.1.0"
+        "node-wp-i18n": "^1.2.8",
+        "wp-readme-to-markdown": "^1.0.1"
     },
     "dependencies": {}
 }

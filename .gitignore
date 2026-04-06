@@ -1,4 +1,7 @@
 /node_modules/
+/vendor/
+composer.lock
+.phpunit.result.cache
 .DS_Store
 .idea/
 /wordpress

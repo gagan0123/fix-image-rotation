@@ -1,0 +1,58 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  phpunit:
+    name: PHPUnit (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3']
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install SVN
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: gd, exif, mysqli
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer update --no-progress
+
+      - name: Set up WordPress test library
+        uses: sjinks/setup-wordpress-test-library@v2.1.5
+        with:
+          version: latest
+          db_user: root
+          db_password: root
+          db_name: wordpress_test
+          db_host: 127.0.0.1
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit
