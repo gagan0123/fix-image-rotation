@@ -27,4 +27,4 @@ jobs:
           composer global require squizlabs/php_codesniffer wp-coding-standards/wpcs:"^3.0" --no-interaction
 
       - name: Run PHPCS
-        run: phpcs --report=checkstyle | cs2pr
+        run: phpcs -q --report=checkstyle | cs2pr
