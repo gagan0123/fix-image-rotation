@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -23,6 +23,7 @@ jobs:
 
       - name: Install WPCS
         run: |
+          composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
           composer global require wp-coding-standards/wpcs:"^3.0" --no-interaction
           phpcs --config-set installed_paths "$(composer global config home)/vendor/wp-coding-standards/wpcs"
 
