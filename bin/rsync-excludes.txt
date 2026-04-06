@@ -15,9 +15,13 @@ scripts
 package.json
 phpunit.xml
 phpunit.xml.dist
+wp-tests-config.php
 phpcs.xml
+composer.json
+composer.lock
 package-lock.json
 node_modules
+vendor
 .sass-cache
 .github
 .travis.yml
