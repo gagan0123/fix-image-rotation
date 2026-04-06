@@ -40,7 +40,7 @@ jobs:
           tools: composer:v2
 
       - name: Install Composer dependencies
-        run: composer install --no-progress
+        run: composer update --no-progress
 
       - name: Set up WordPress test library
         uses: sjinks/setup-wordpress-test-library@v2.1.5
