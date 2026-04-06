@@ -32,6 +32,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Install SVN
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -46,11 +49,10 @@ jobs:
         uses: sjinks/setup-wordpress-test-library@v2.1.5
         with:
           version: latest
+          db_user: root
+          db_password: root
+          db_name: wordpress_test
+          db_host: 127.0.0.1
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit
-        env:
-          WP_TESTS_DB_NAME: wordpress_test
-          WP_TESTS_DB_USER: root
-          WP_TESTS_DB_PASSWORD: root
-          WP_TESTS_DB_HOST: 127.0.0.1
