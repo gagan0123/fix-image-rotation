@@ -4,3 +4,4 @@
 /wordpress
 /slow.log
 /profiler-output
+.lando.local.yml

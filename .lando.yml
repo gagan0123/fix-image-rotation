@@ -1,69 +1,117 @@
+# MUST be unique per project: it keys the container names, the database volume
+# and the *.lndo.site hostname. Keep it equal to the plugin slug.
 name: fix-image-rotation
 recipe: wordpress
 config:
   via: nginx
-  php: 7.4
+  php: "8.4"
+  # WordPress core lives in ./wordpress (gitignored); the plugin repo itself is
+  # bind-mounted into wp-content/plugins below.
   webroot: wordpress
-  database: mariadb
-  xdebug: true
+  # Pinned to avoid Lando's legacy default (10.3) and keep environments reproducible.
+  database: mariadb:10.11
+  # Must stay "" (not false). `false` makes Lando export XDEBUG_MODE=off, and the
+  # env var overrides the xdebug.mode that `lando xdebug <mode>` writes to the ini.
+  xdebug: ""
   config:
     php: .lando/php.ini
+    database: .lando/mysql.cnf
+    vhosts: .lando/nginx.conf
+proxy:
+  mailpit:
+    - fix-image-rotation-mail.lndo.site
 services:
-  mailhog:
-    type: mailhog
+  mailpit:
+    type: mailpit
     portforward: false
-    hogfrom:
-      - appserver
   appserver:
     overrides:
       environment:
-        # Make this environment variable empty or else runtime xdebug mode change will not work
-        XDEBUG_MODE: ''
-        # Support debugging Drush with XDEBUG.
+        # Support debugging with XDEBUG.
         PHP_IDE_CONFIG: "serverName=appserver"
         PROFILER_OUTPUT_DIR: "profiler-output" # If changing this value, change in .gitignore also
+        # WordPress core version downloaded on first start / rebuild. Pinned so
+        # every developer runs the same core; bump deliberately.
+        WP_VERSION: "7.1.2"
+        PLUGIN_SLUG: "fix-image-rotation"
       volumes:
         - '.lando/wp-cli.yml:/wp-cli.yml'
         - '.:/app/wordpress/wp-content/plugins/fix-image-rotation'
+        # Anonymous volumes hide these from the nested plugin mount, so WordPress
+        # does not see a second copy of core or scan node_modules.
         - '/app/wordpress/wp-content/plugins/fix-image-rotation/wordpress'
         - '/app/wordpress/wp-content/plugins/fix-image-rotation/node_modules'
     build_as_root:
-      - curl -sL https://deb.nodesource.com/setup_14.x | bash -
-      - apt-get install -y nodejs
+      - | # Install Node.js 24 (Active LTS) using the signed-keyring NodeSource repo.
+        apt-get update && apt-get install -y ca-certificates curl gnupg
+        mkdir -p /etc/apt/keyrings
+        curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor --yes -o /etc/apt/keyrings/nodesource.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+        apt-get update && apt-get install -y nodejs
     build:
-      - wp core download --force --skip-content
-      - touch slow.log && chmod 777 slow.log
+      - | # Download WordPress core only when the pinned version is not already present.
+        if [ "$(wp core version 2>/dev/null)" != "$WP_VERSION" ]; then
+          wp core download --version="$WP_VERSION" --force --skip-content
+        fi
+      - | # PHPCS with WordPress Coding Standards + PHPCompatibility, for `lando phpcs`.
+        composer global config --no-interaction allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+        composer global require --no-interaction --no-progress \
+          wp-coding-standards/wpcs:"^3.0" \
+          phpcompatibility/phpcompatibility-wp:"^2.1"
+        # Used only when the repo has no phpcs.xml(.dist) of its own.
+        ~/.composer/vendor/bin/phpcs --config-set default_standard WordPress
     run:
-      - sleep 2 # For some reason, we have to wait at least a second till database is up.
-      - | # Create WordPress config file and add necessary constants and custom config
-        wp config create --dbhost=database --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbprefix=wp_ --force
+      - | # The recipe healthcheck already gates on the database; this is a cheap belt-and-braces wait.
+        until mariadb-admin ping -h database --silent 2>/dev/null || mysqladmin ping -h database --silent 2>/dev/null; do sleep 1; done
+      - wp config create --dbhost=database --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbprefix=wp_ --force
       - wp config set WP_DISABLE_FATAL_ERROR_HANDLER true --raw
       - wp config set WP_DEBUG true --raw
       - wp config set WP_DEBUG_LOG true --raw
       - wp config set WP_DEBUG_DISPLAY false --raw
+      - wp config set SCRIPT_DEBUG true --raw
+      - wp config set AUTOMATIC_UPDATER_DISABLED true --raw
+      - wp config set DISALLOW_FILE_EDIT true --raw
       - wp config set WP_ENVIRONMENT_TYPE 'local'
-      - wp db reset --yes
-      - rm -rf /app/wordpress/wp-content/uploads/*
-      - | # Let's check if WordPress is not installed, then install it
-        wp core install --url=https://$LANDO_APP_NAME.$LANDO_DOMAIN \
-          --title=$LANDO_APP_NAME \
-          --admin_user=admin \
-          --admin_password=password \
-          --admin_email=lando@wordpress.org \
-          --skip-email
-        wp theme install --activate twentytwentytwo
+      - | # Install WordPress if it is not already installed.
+        # Override the generated admin password by setting WP_ADMIN_PASSWORD in a
+        # gitignored .lando.local.yml (services.appserver.overrides.environment).
+        if ! wp core is-installed; then
+          ADMIN_PASSWORD="${WP_ADMIN_PASSWORD:-$(openssl rand -base64 16 | tr -dc 'A-Za-z0-9' | head -c 20)}"
+          wp core install --url=https://$LANDO_APP_NAME.$LANDO_DOMAIN \
+            --title=$LANDO_APP_NAME \
+            --admin_user=admin \
+            --admin_password="$ADMIN_PASSWORD" \
+            --admin_email=me@gagan.pro \
+            --skip-email
+          echo "=========================================="
+          echo "WordPress admin password: $ADMIN_PASSWORD"
+          echo "Reset later with: lando wp user update admin --user_pass=<new>"
+          echo "=========================================="
+          wp theme install --activate twentytwentyfive
+          wp plugin install --activate query-monitor
+          wp plugin activate "$PLUGIN_SLUG"
+        fi
 tooling:
   xdebug:
     description: Loads Xdebug in the selected mode.
     cmd:
       - appserver: /app/.lando/xdebug.sh
     user: root
+  phpcs:
+    description: Runs PHP_CodeSniffer (uses the repo's phpcs.xml(.dist) when present, else WordPress).
+    service: appserver
+    cmd: /var/www/.composer/vendor/bin/phpcs
+  phpcbf:
+    description: Fixes PHP_CodeSniffer violations.
+    service: appserver
+    cmd: /var/www/.composer/vendor/bin/phpcbf
   node:
     service: appserver
   npm:
     service: appserver
-  imagick:
-    description: Enable or disable Imagick extension.
-    cmd:
-      - appserver: /app/.lando/imagick.sh
-    user: root
+  npx:
+    service: appserver
+events:
+  post-db-import:
+    - appserver: wp cache flush
+    - appserver: wp rewrite flush

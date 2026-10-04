@@ -1,0 +1,32 @@
+# MariaDB tuning for local development. This file REPLACES the Lando recipe
+# defaults rather than extending them, so anything we rely on must be here.
+# Durability is traded for speed throughout; never reuse on a real server.
+[mysqld]
+character_set_server = utf8mb4
+collation_server = utf8mb4_unicode_ci
+
+# Large dumps via `lando db-import`. The Bitnami image default is only 16M.
+max_allowed_packet = 256M
+
+# MariaDB uses the smaller of these two for in-memory temp tables, so they
+# must be raised together.
+max_heap_table_size = 64M
+tmp_table_size = 64M
+
+innodb_buffer_pool_size = 1G
+innodb_flush_log_at_trx_commit = 0
+innodb_flush_log_at_timeout = 10
+innodb_doublewrite = off
+# Deprecated in MariaDB 11.0+ (replaced by innodb_*_file_buffering /
+# innodb_*_write_through). Remove when bumping past 10.11.
+innodb_flush_method = O_DIRECT_NO_FSYNC
+innodb_io_capacity = 4000
+
+join_buffer_size = 20M
+sort_buffer_size = 2M
+read_rnd_buffer_size = 20M
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet = 256M
